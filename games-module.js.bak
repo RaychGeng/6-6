@@ -1,0 +1,1512 @@
+// 游戏模块JavaScript
+// 全局变量
+let matchCount = 0; // 用于跟踪麻将游戏的匹配数量
+let moveCount = 0; // 用于跟踪华容道的移动次数
+
+// 加载中文字体
+function loadChineseFont() {
+    const fontLink = document.createElement('link');
+    fontLink.rel = 'stylesheet';
+    fontLink.href = 'https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap';
+    document.head.appendChild(fontLink);
+}
+
+// 页面加载完成后调用
+document.addEventListener('DOMContentLoaded', function() {
+    loadChineseFont();
+    // 找到"益智游戏"菜单项
+    const gameMenuItems = document.querySelectorAll('.nav-item');
+    gameMenuItems.forEach(item => {
+        const span = item.querySelector('span');
+        if (span && span.textContent === '益智游戏') {
+            // 为"益智游戏"菜单项添加特殊的点击事件处理
+            item.addEventListener('click', function(e) {
+                // 不再跳转到games.html，而是在主内容区域显示游戏内容
+                showGamesInMainContent();
+                
+                // 移除所有菜单项的active类
+                gameMenuItems.forEach(nav => nav.classList.remove('active'));
+                
+                // 给当前点击的菜单项添加active类
+                this.classList.add('active');
+            });
+        }
+    });
+});
+
+// 在主内容区域显示游戏
+function showGamesInMainContent() {
+    // 获取主内容区域
+    const mainContent = document.querySelector('.main-content');
+    if (!mainContent) return;
+    
+    // 清空主内容区域
+    mainContent.innerHTML = '';
+    
+    // 创建游戏页面标题
+    const header = document.createElement('div');
+    header.className = 'dashboard-header';
+    header.innerHTML = `
+        <h1 class="dashboard-title">益智游戏</h1>
+        <div class="dashboard-actions">
+            <button class="dashboard-btn">
+                <i class="fas fa-trophy"></i>
+                我的成就
+            </button>
+            <button class="dashboard-btn primary">
+                <i class="fas fa-gamepad"></i>
+                全部游戏
+            </button>
+        </div>
+    `;
+    
+    mainContent.appendChild(header);
+    
+    // 创建游戏容器
+    const gamesContainer = document.createElement('div');
+    gamesContainer.className = 'games-container';
+    
+    // 游戏数据
+    const games = [
+        {
+            id: 'poetry-game',
+            title: '古诗飞花令',
+            desc: '挑战你的古诗词知识，回答含有指定字的诗句！',
+            image: 'https://via.placeholder.com/300x160',
+            badge: 'hot'
+        },
+        {
+            id: 'number-puzzle',
+            title: '数字华容道',
+            desc: '通过滑动数字方块，将它们排列成正确顺序。',
+            image: 'https://via.placeholder.com/300x160',
+            badge: 'new'
+        },
+        {
+            id: 'english-mahjong',
+            title: '英语版麻将',
+            desc: '将传统麻将与英语学习结合，使用英文字母牌拼词胡牌，提升英语词汇量和记忆力！',
+            image: 'images/english-mahjong.png',
+            badge: 'reward'
+        }
+    ];
+    
+    // 为每个游戏创建卡片
+    games.forEach(game => {
+        const gameCard = document.createElement('div');
+        gameCard.className = 'game-card';
+        gameCard.innerHTML = `
+            <div class="game-image">
+                <img src="${game.image}" alt="${game.title}">
+                ${game.badge ? `<div class="game-badge ${game.badge}">${game.badge === 'hot' ? '热门' : game.badge === 'new' ? '新游戏' : '有奖励'}</div>` : ''}
+            </div>
+            <div class="game-content">
+                <div class="game-title">${game.title}</div>
+                <div class="game-desc">${game.desc}</div>
+                <div class="game-meta">
+                    <span><i class="fas fa-users"></i> 5000+ 玩家</span>
+                    <span><i class="fas fa-star"></i> 4.8</span>
+                </div>
+                <button class="game-btn" onclick="showGameContent('${game.id}')">开始游戏</button>
+            </div>
+        `;
+        gamesContainer.appendChild(gameCard);
+    });
+    
+    mainContent.appendChild(gamesContainer);
+    
+    // 在window对象上定义showGameContent方法，使其可以在游戏按钮的onclick中调用
+    window.showGameContent = function(gameId) {
+        showSpecificGameContent(gameId);
+    };
+}
+
+// 显示特定游戏的内容
+function showSpecificGameContent(gameId) {
+    // 获取主内容区域
+    const mainContent = document.querySelector('.main-content');
+    if (!mainContent) return;
+    
+    // 清空主内容区域
+    mainContent.innerHTML = '';
+    
+    // 游戏内容数据
+    const gameData = {
+        'poetry-game': {
+            title: '古诗飞花令',
+            description: '在这个游戏中，你需要回答含有指定字的古诗词，考验你的古诗文学知识。',
+            content: `
+                <div class="game-play-area">
+                    <div class="poetry-challenge">
+                        <h3>当前飞花令：含"<span class="highlight-char">花</span>"字的诗句</h3>
+                        <div class="poetry-question">请说出一句含有"花"字的诗句：</div>
+                        <div class="poetry-input-area">
+                            <input type="text" class="poetry-answer" placeholder="请输入诗句...">
+                            <button class="submit-answer">提交</button>
+                        </div>
+                        <div class="poetry-examples">
+                            <h4>示例：</h4>
+                            <p>- 花间一壶酒，独酌无相亲。</p>
+                            <p>- 春风又绿江南岸，明月何时照我还。</p>
+                        </div>
+                        <div class="game-progress">
+                            回合 1/10
+                        </div>
+                    </div>
+                </div>
+            `
+        },
+        'number-puzzle': {
+            title: '数字华容道',
+            description: '通过滑动数字方块，将数字排列成正确的顺序，锻炼你的思维能力！',
+            content: `
+                <div class="game-play-area">
+                    <div class="number-puzzle-board">
+                        <div class="puzzle-grid">
+                            <div class="puzzle-tile">1</div>
+                            <div class="puzzle-tile">2</div>
+                            <div class="puzzle-tile">3</div>
+                            <div class="puzzle-tile">4</div>
+                            <div class="puzzle-tile">5</div>
+                            <div class="puzzle-tile">6</div>
+                            <div class="puzzle-tile">7</div>
+                            <div class="puzzle-tile">8</div>
+                            <div class="puzzle-tile empty"></div>
+                        </div>
+                        <div class="puzzle-controls">
+                            <button class="reset-puzzle">重置</button>
+                            <button class="shuffle-puzzle">打乱</button>
+                        </div>
+                        <div class="game-progress">
+                            移动次数: 0
+                        </div>
+                    </div>
+                </div>
+            `
+        },
+        'english-mahjong': {
+            title: '英语版麻将',
+            description: '将传统麻将与英语学习结合，使用英文字母牌拼词胡牌，提升英语词汇量和记忆力！',
+            content: `
+                <div class="game-play-area">
+                    <div class="english-mahjong-game">
+                        <div class="game-info-panel">
+                            <h3>英语麻将</h3>
+                            <div class="game-rules-toggle">规则说明</div>
+                            <div class="game-rules-panel">
+                                <h4>游戏规则简介：</h4>
+                                <ul>
+                                    <li>牌组：104张字母牌(A-Z各4张)，万能牌为G</li>
+                                    <li>目标：组合有效英文单词，并保留一对相同字母("眼")</li>
+                                    <li>胡牌条件：至少2个有效单词 + 1对"眼"，或14张牌组成一个完整单词</li>
+                                    <li>计分规则：基础胡牌(+20分)、单词长度加分、句子组合(+50)</li>
+                                </ul>
+                                <button class="close-rules">关闭</button>
+                            </div>
+                        </div>
+                        
+                        <!-- 圆形麻将牌桌 -->
+                        <div class="mahjong-table">
+                            <!-- 中央装饰和弃牌区 -->
+                            <div class="game-center">
+                                <!-- 游戏状态信息 -->
+                                <div class="game-status">
+                                    <div class="round-info">第 <span class="round-number">1</span>/3 局</div>
+                                    <div class="timer-circle">
+                                        <span class="timer-number">30</span>
+                                    </div>
+                                    <div class="pool-count">牌池: <span id="pool-remaining">104</span></div>
+                                </div>
+                                
+                                <!-- 中央mahjong标志 -->
+                                <div class="table-center-decoration">
+                                    <div class="chinese-character">mahjong</div>
+                                </div>
+                                
+                                <!-- 弃牌区 -->
+                                <div class="discard-area">
+                                    <div class="discard-tiles"></div>
+                                </div>
+                            </div>
+                            
+                            <!-- 对家（北） -->
+                            <div class="player player-2">
+                                <div class="player-info">
+                                    <div class="player-avatar">
+                                        <img src="https://via.placeholder.com/60/3498db/ffffff?text=P2" alt="玩家2">
+                                    </div>
+                                    <div class="player-details">
+                                        <div class="player-name">玩家2</div>
+                                        <div class="player-score">0</div>
+                                    </div>
+                                </div>
+                                <div class="player-tiles top-tiles"></div>
+                            </div>
+                            
+                            <!-- 左家（西） -->
+                            <div class="player player-3">
+                                <div class="player-info">
+                                    <div class="player-avatar">
+                                        <img src="https://via.placeholder.com/60/e74c3c/ffffff?text=P3" alt="玩家3">
+                                    </div>
+                                    <div class="player-details">
+                                        <div class="player-name">玩家3</div>
+                                        <div class="player-score">0</div>
+                                    </div>
+                                </div>
+                                <div class="player-tiles left-tiles"></div>
+                            </div>
+                            
+                            <!-- 右家（东） -->
+                            <div class="player player-4">
+                                <div class="player-info">
+                                    <div class="player-avatar">
+                                        <img src="https://via.placeholder.com/60/2ecc71/ffffff?text=P4" alt="玩家4">
+                                    </div>
+                                    <div class="player-details">
+                                        <div class="player-name">玩家4</div>
+                                        <div class="player-score">0</div>
+                                    </div>
+                                </div>
+                                <div class="player-tiles right-tiles"></div>
+                            </div>
+                            
+                            <!-- 自家（南） -->
+                            <div class="player player-1 current">
+                                <div class="player-info">
+                                    <div class="player-avatar">
+                                        <img src="https://via.placeholder.com/60/f39c12/ffffff?text=P1" alt="玩家1">
+                                    </div>
+                                    <div class="player-details">
+                                        <div class="player-name">玩家1</div>
+                                        <div class="player-score">0</div>
+                                    </div>
+                                </div>
+                                <div class="player-tiles bottom-tiles"></div>
+                                <div class="player-actions">
+                                    <button class="action-draw">摸牌</button>
+                                    <button class="action-discard" disabled>出牌</button>
+                                    <button class="action-win" disabled>胡牌</button>
+                                </div>
+                                <div class="words-formed">
+                                    <div class="words-title">已组词:</div>
+                                    <div class="word-list"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="game-controls">
+                            <button class="new-mahjong-game">新游戏</button>
+                            <button class="toggle-dictionary">词典</button>
+                            <div class="dictionary-panel">
+                                <h4>单词验证</h4>
+                                <input type="text" class="word-check" placeholder="输入单词验证...">
+                                <button class="check-word">验证</button>
+                                <div class="dictionary-result"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `
+        }
+    };
+    
+    // 获取特定游戏的数据
+    const game = gameData[gameId];
+    if (!game) {
+        mainContent.innerHTML = '<div class="error-message">游戏不存在</div>';
+        return;
+    }
+    
+    // 创建游戏内容
+    const gameContent = document.createElement('div');
+    gameContent.className = 'game-detail';
+    gameContent.innerHTML = `
+        <div class="dashboard-header">
+            <h1 class="dashboard-title">${game.title}</h1>
+            <div class="dashboard-actions">
+                <button class="dashboard-btn" onclick="showGamesInMainContent()">
+                    <i class="fas fa-arrow-left"></i>
+                    返回游戏列表
+                </button>
+            </div>
+        </div>
+        <div class="game-description">
+            <p>${game.description}</p>
+        </div>
+        <div class="game-content-area">
+            ${game.content}
+        </div>
+    `;
+    
+    mainContent.appendChild(gameContent);
+    
+    // 添加游戏样式
+    addGameStyles();
+    
+    // 可以在这里添加游戏交互逻辑
+    if (gameId === 'poetry-game') {
+        initPoetryGame();
+    } else if (gameId === 'number-puzzle') {
+        initNumberPuzzle();
+    } else if (gameId === 'english-mahjong') {
+        initEnglishMahjong();
+    }
+}
+
+// 添加游戏所需的样式
+function addGameStyles() {
+    // 检查是否已经添加了样式
+    if (document.getElementById('game-styles')) return;
+    
+    const styleElement = document.createElement('style');
+    styleElement.id = 'game-styles';
+    styleElement.textContent = `
+        .game-play-area {
+            background: #f8f9fd;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* 数学游戏样式 */
+        .math-problem {
+            text-align: center;
+        }
+        
+        .math-question {
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 25px 0;
+            color: var(--dark-text);
+        }
+        
+        .math-options {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+        }
+        
+        .option-btn {
+            padding: 15px 25px;
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .option-btn:hover {
+            background: rgba(255, 107, 53, 0.1);
+            border-color: var(--primary-color);
+            transform: translateY(-3px);
+        }
+        
+        /* 记忆游戏样式 */
+        .memory-game-board {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .memory-card {
+            height: 100px;
+            background: var(--primary-color);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .memory-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* 文字游戏样式 */
+        .word-puzzle {
+            text-align: center;
+        }
+        
+        .scrambled-word {
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 25px 0;
+            color: var(--dark-text);
+            letter-spacing: 5px;
+        }
+        
+        .word-hint {
+            margin-bottom: 20px;
+            font-style: italic;
+            color: var(--gray-text);
+        }
+        
+        .word-answer {
+            padding: 12px 15px;
+            width: 300px;
+            max-width: 100%;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+        }
+        
+        .submit-answer {
+            padding: 12px 25px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .submit-answer:hover {
+            background: #e55a2a;
+            transform: translateY(-3px);
+        }
+        
+        .game-progress {
+            margin-top: 20px;
+            font-weight: 500;
+            color: var(--gray-text);
+        }
+
+        .english-mahjong-game .mahjong-table {
+            position: relative;
+            width: 100%;
+            height: 600px;
+            background-color: #e9d8b6;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .english-mahjong-game .table-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(#d9c8a6 10%, transparent 11%),
+                              radial-gradient(#d9c8a6 10%, transparent 11%);
+            background-size: 20px 20px;
+            background-position: 0 0, 10px 10px;
+            opacity: 0.6;
+            z-index: 1;
+        }
+
+        .english-mahjong-game .table-border {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+        }
+
+        .english-mahjong-game .table-corner {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-color: #8b4513;
+            z-index: 3;
+        }
+
+        .english-mahjong-game .top-left {
+            top: 0;
+            left: 0;
+            border-radius: 10px 0 0 0;
+        }
+
+        .english-mahjong-game .top-right {
+            top: 0;
+            right: 0;
+            border-radius: 0 10px 0 0;
+        }
+
+        .english-mahjong-game .bottom-left {
+            bottom: 0;
+            left: 0;
+            border-radius: 0 0 0 10px;
+        }
+
+        .english-mahjong-game .bottom-right {
+            bottom: 0;
+            right: 0;
+            border-radius: 0 0 10px 0;
+        }
+
+        .english-mahjong-game .table-edge {
+            position: absolute;
+            background-color: #8b4513;
+            z-index: 3;
+        }
+
+        .english-mahjong-game .top-edge, .english-mahjong-game .bottom-edge {
+            height: 10px;
+            width: calc(100% - 60px);
+            left: 30px;
+        }
+
+        .english-mahjong-game .top-edge {
+            top: 0;
+        }
+
+        .english-mahjong-game .bottom-edge {
+            bottom: 0;
+        }
+
+        .english-mahjong-game .left-edge, .english-mahjong-game .right-edge {
+            width: 10px;
+            height: calc(100% - 60px);
+            top: 30px;
+        }
+
+        .english-mahjong-game .left-edge {
+            left: 0;
+        }
+
+        .english-mahjong-game .right-edge {
+            right: 0;
+        }
+
+        .english-mahjong-game .table-center-decoration {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+            width: 80px;
+            height: 80px;
+            background-color: rgba(139, 69, 19, 0.1);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .english-mahjong-game .chinese-character {
+            font-size: 50px;
+            color: rgba(139, 69, 19, 0.4);
+            font-family: 'Ma Shan Zheng', cursive;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+            animation: pulsate 2s infinite alternate;
+            transform: rotate(-5deg);
+        }
+        
+        @keyframes pulsate {
+            from {
+                opacity: 0.6;
+                transform: scale(0.95) rotate(-5deg);
+            }
+            to {
+                opacity: 0.8;
+                transform: scale(1.05) rotate(-5deg);
+            }
+        }
+    `;
+    
+    document.head.appendChild(styleElement);
+}
+
+// 初始化古诗飞花令游戏
+function initPoetryGame() {
+    const submitBtn = document.querySelector('.submit-answer');
+    const answerInput = document.querySelector('.poetry-answer');
+    
+    if (submitBtn && answerInput) {
+        submitBtn.addEventListener('click', function() {
+            const answer = answerInput.value.trim();
+            
+            // 检查答案是否包含"花"字
+            if (answer.includes('花')) {
+                alert('恭喜！回答正确！');
+                // 这里可以加载下一题
+                answerInput.value = '';
+            } else {
+                alert('请输入包含"花"字的诗句！');
+            }
+        });
+    }
+}
+
+// 初始化数字华容道游戏
+function initNumberPuzzle() {
+    const resetBtn = document.querySelector('.reset-puzzle');
+    const shuffleBtn = document.querySelector('.shuffle-puzzle');
+    const tiles = document.querySelectorAll('.puzzle-tile');
+    
+    if (resetBtn && shuffleBtn) {
+        resetBtn.addEventListener('click', function() {
+            // 重置游戏
+            resetPuzzle();
+        });
+        
+        shuffleBtn.addEventListener('click', function() {
+            // 打乱数字方块
+            shufflePuzzle();
+        });
+    }
+    
+    // 为每个方块添加点击事件
+    tiles.forEach(tile => {
+        tile.addEventListener('click', function() {
+            // 如果不是空白方块，检查是否可以移动
+            if (!this.classList.contains('empty')) {
+                moveTile(this);
+            }
+        });
+    });
+}
+
+// 重置华容道
+function resetPuzzle() {
+    const tiles = document.querySelectorAll('.puzzle-tile');
+    const moveCountDisplay = document.querySelector('.game-progress');
+    let index = 0;
+    
+    tiles.forEach(tile => {
+        if (index < 8) {
+            tile.textContent = index + 1;
+            tile.classList.remove('empty');
+        } else {
+            tile.textContent = '';
+            tile.classList.add('empty');
+        }
+        index++;
+    });
+    
+    // 重置移动次数
+    moveCount = 0;
+    if (moveCountDisplay) {
+        moveCountDisplay.textContent = `移动次数: ${moveCount}`;
+    }
+}
+
+// 打乱华容道
+function shufflePuzzle() {
+    const tiles = document.querySelectorAll('.puzzle-tile');
+    const numbers = [1, 2, 3, 4, 5, 6, 7, 8, ''];
+    const moveCountDisplay = document.querySelector('.game-progress');
+    
+    // 随机排序数字
+    for (let i = numbers.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [numbers[i], numbers[j]] = [numbers[j], numbers[i]];
+    }
+    
+    // 应用随机排序
+    tiles.forEach((tile, index) => {
+        if (numbers[index] === '') {
+            tile.textContent = '';
+            tile.classList.add('empty');
+        } else {
+            tile.textContent = numbers[index];
+            tile.classList.remove('empty');
+        }
+    });
+    
+    // 重置移动次数
+    moveCount = 0;
+    if (moveCountDisplay) {
+        moveCountDisplay.textContent = `移动次数: ${moveCount}`;
+    }
+}
+
+// 移动方块
+function moveTile(tile) {
+    const emptyTile = document.querySelector('.puzzle-tile.empty');
+    const moveCountDisplay = document.querySelector('.game-progress');
+    
+    // 检查是否可以移动
+    if (canMove(tile, emptyTile)) {
+        // 交换内容
+        const temp = tile.textContent;
+        tile.textContent = '';
+        emptyTile.textContent = temp;
+        
+        // 交换类
+        tile.classList.add('empty');
+        emptyTile.classList.remove('empty');
+        
+        // 更新移动次数
+        moveCount++;
+        if (moveCountDisplay) {
+            moveCountDisplay.textContent = `移动次数: ${moveCount}`;
+        }
+        
+        // 检查是否完成
+        checkWin();
+    }
+}
+
+// 检查方块是否可以移动
+function canMove(tile, emptyTile) {
+    const tiles = Array.from(document.querySelectorAll('.puzzle-tile'));
+    const tileIndex = tiles.indexOf(tile);
+    const emptyIndex = tiles.indexOf(emptyTile);
+    
+    // 检查是否相邻（上下左右）
+    return (
+        (Math.abs(tileIndex - emptyIndex) === 1 && Math.floor(tileIndex / 3) === Math.floor(emptyIndex / 3)) || // 左右相邻
+        (Math.abs(tileIndex - emptyIndex) === 3) // 上下相邻
+    );
+}
+
+// 检查是否完成华容道
+function checkWin() {
+    const tiles = document.querySelectorAll('.puzzle-tile:not(.empty)');
+    let isWin = true;
+    
+    tiles.forEach((tile, index) => {
+        if (parseInt(tile.textContent) !== index + 1) {
+            isWin = false;
+        }
+    });
+    
+    if (isWin) {
+        setTimeout(() => {
+            alert(`恭喜！你完成了华容道！共移动 ${moveCount} 次。`);
+        }, 300);
+    }
+}
+
+// 初始化英语版麻将游戏
+function initEnglishMahjong() {
+    // 游戏状态变量
+    let gameState = {
+        tilePool: [], // 牌池
+        players: [
+            { name: "玩家1", tiles: [], words: [], eyes: null, score: 0 },
+            { name: "玩家2", tiles: [], words: [], eyes: null, score: 0 },
+            { name: "玩家3", tiles: [], words: [], eyes: null, score: 0 },
+            { name: "玩家4", tiles: [], words: [], eyes: null, score: 0 }
+        ],
+        currentPlayer: 0,
+        discardPile: [],
+        selectedTiles: [],
+        gameStarted: false,
+        lastDiscarded: null
+    };
+    
+    // 设置牌桌样式为渐变橙色
+    const mahjongTable = document.querySelector('.mahjong-table');
+    if (mahjongTable) {
+        mahjongTable.style.background = 'linear-gradient(135deg, #ffa500, #ff8c00)';
+    }
+    
+    // 调整玩家位置到合理的位置
+    const player2Container = document.querySelector('.player-2');
+    const player3Container = document.querySelector('.player-3');
+    const player4Container = document.querySelector('.player-4');
+    
+    if (player2Container && player3Container && player4Container) {
+        // 对家玩家2放在正对面
+        player2Container.style.transform = 'translateY(-20px)';
+        
+        // 左边玩家3放在左边
+        player3Container.style.left = '10px';
+        player3Container.style.top = '50%';
+        player3Container.style.transform = 'translateY(-50%)';
+        
+        // 右边玩家4放在右边
+        player4Container.style.right = '10px';
+        player4Container.style.top = '50%';
+        player4Container.style.transform = 'translateY(-50%)';
+    }
+    
+    // 绑定游戏控制按钮
+    const newGameBtn = document.querySelector('.new-mahjong-game');
+    const rulesToggle = document.querySelector('.game-rules-toggle');
+    const closeRules = document.querySelector('.close-rules');
+    const drawBtn = document.querySelector('.action-draw');
+    const discardBtn = document.querySelector('.action-discard');
+    const claimBtn = document.querySelector('.action-claim');
+    const tripleBtn = document.querySelector('.action-triple');
+    const winBtn = document.querySelector('.action-win');
+    const dictionaryToggle = document.querySelector('.toggle-dictionary');
+    const checkWordBtn = document.querySelector('.check-word');
+    
+    // 事件监听
+    if (newGameBtn) {
+        newGameBtn.addEventListener('click', startNewMahjongGame);
+    }
+    
+    if (rulesToggle) {
+        rulesToggle.addEventListener('click', toggleRulesPanel);
+    }
+    
+    if (closeRules) {
+        closeRules.addEventListener('click', toggleRulesPanel);
+    }
+    
+    if (dictionaryToggle) {
+        dictionaryToggle.addEventListener('click', toggleDictionaryPanel);
+    }
+    
+    if (drawBtn) {
+        drawBtn.addEventListener('click', drawTile);
+    }
+    
+    if (discardBtn) {
+        discardBtn.addEventListener('click', discardTile);
+    }
+    
+    if (claimBtn) {
+        claimBtn.addEventListener('click', claimTile);
+    }
+    
+    if (tripleBtn) {
+        tripleBtn.addEventListener('click', claimTriple);
+    }
+    
+    if (winBtn) {
+        winBtn.addEventListener('click', declareWin);
+    }
+    
+    if (checkWordBtn) {
+        checkWordBtn.addEventListener('click', checkWord);
+    }
+    
+    // 初始化游戏
+    initializeGame();
+    
+    // 游戏初始化函数
+    function initializeGame() {
+        const rulesPanel = document.querySelector('.game-rules-panel');
+        const dictionaryPanel = document.querySelector('.dictionary-panel');
+        const rulesToggle = document.querySelector('.game-rules-toggle');
+        const dictionaryToggle = document.querySelector('.toggle-dictionary');
+        
+        // 设置规则按钮和词典按钮样式
+        if (rulesToggle) {
+            rulesToggle.style.background = 'linear-gradient(to bottom, #ffd700, #ff8c00)';
+            rulesToggle.style.color = 'white';
+            rulesToggle.style.borderRadius = '30px';
+            rulesToggle.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.2)';
+        }
+        
+        if (dictionaryToggle) {
+            dictionaryToggle.style.background = 'linear-gradient(to bottom, #ffd700, #ff8c00)';
+            dictionaryToggle.style.color = 'white';
+            dictionaryToggle.style.borderRadius = '30px';
+            dictionaryToggle.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.2)';
+        }
+        
+        // 设置规则面板和词典面板样式
+        if (rulesPanel) {
+            rulesPanel.style.background = 'rgba(255, 255, 255, 0.9)';
+            rulesPanel.style.borderRadius = '10px';
+            rulesPanel.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.2)';
+            rulesPanel.style.border = '2px solid #ff8c00';
+            rulesPanel.style.display = 'none';
+            
+            const closeBtn = rulesPanel.querySelector('.close-rules');
+            if (closeBtn) {
+                closeBtn.style.background = 'linear-gradient(to bottom, #ffd700, #ff8c00)';
+                closeBtn.style.color = 'white';
+                closeBtn.style.borderRadius = '20px';
+                closeBtn.style.padding = '8px 15px';
+                closeBtn.style.border = 'none';
+                closeBtn.style.cursor = 'pointer';
+                closeBtn.style.boxShadow = '0 2px 6px rgba(0, 0, 0, 0.2)';
+            }
+        }
+        
+        if (dictionaryPanel) {
+            dictionaryPanel.style.background = 'rgba(255, 255, 255, 0.9)';
+            dictionaryPanel.style.borderRadius = '10px';
+            dictionaryPanel.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.2)';
+            dictionaryPanel.style.border = '2px solid #ff8c00';
+            dictionaryPanel.style.display = 'none';
+            
+            const checkBtn = dictionaryPanel.querySelector('.check-word');
+            if (checkBtn) {
+                checkBtn.style.background = 'linear-gradient(to bottom, #ffd700, #ff8c00)';
+                checkBtn.style.color = 'white';
+                checkBtn.style.borderRadius = '20px';
+                checkBtn.style.padding = '8px 15px';
+                checkBtn.style.border = 'none';
+                checkBtn.style.cursor = 'pointer';
+                checkBtn.style.boxShadow = '0 2px 6px rgba(0, 0, 0, 0.2)';
+            }
+            
+            const wordInput = dictionaryPanel.querySelector('.word-check');
+            if (wordInput) {
+                wordInput.style.borderRadius = '20px';
+                wordInput.style.padding = '8px 15px';
+                wordInput.style.border = '1px solid #ddd';
+                wordInput.style.marginBottom = '10px';
+                wordInput.style.width = '100%';
+                wordInput.style.boxSizing = 'border-box';
+            }
+        }
+        
+        // 更新计时器
+        setInterval(() => {
+            const timerNumber = document.querySelector('.timer-number');
+            if (timerNumber) {
+                const currentTime = parseInt(timerNumber.textContent);
+                if (currentTime > 0) {
+                    timerNumber.textContent = currentTime - 1;
+                } else {
+                    // 时间到，随机出牌
+                    if (gameState.currentPlayer === 0 && gameState.players[0].tiles.length > 0) {
+                        const randomIndex = Math.floor(Math.random() * gameState.players[0].tiles.length);
+                        gameState.selectedTiles = [randomIndex];
+                        updatePlayerTiles();
+                        discardTile();
+                    }
+                }
+            }
+        }, 1000);
+        
+        // 自动开始新游戏
+        startNewMahjongGame();
+    }
+    
+    // 开始新游戏
+    function startNewMahjongGame() {
+        // 重置游戏状态
+        resetGameState();
+        
+        // 初始化牌池
+        initializeTilePool();
+        
+        // 发牌
+        dealTiles();
+        
+        // 更新UI
+        updateUI();
+        
+        // 启用游戏控制
+        enableGameControls();
+        
+        gameState.gameStarted = true;
+    }
+    
+    // 重置游戏状态
+    function resetGameState() {
+        gameState = {
+            tilePool: [],
+            players: [
+                { name: "玩家1", tiles: [], words: [], eyes: null, score: 0 },
+                { name: "玩家2", tiles: [], words: [], eyes: null, score: 0 },
+                { name: "玩家3", tiles: [], words: [], eyes: null, score: 0 },
+                { name: "玩家4", tiles: [], words: [], eyes: null, score: 0 }
+            ],
+            currentPlayer: 0,
+            discardPile: [],
+            selectedTiles: [],
+            gameStarted: false,
+            lastDiscarded: null
+        };
+        
+        // 清空UI
+        document.querySelector('.discard-tiles').innerHTML = '';
+        document.querySelector('.word-list').innerHTML = '';
+        
+        const playerTiles = document.querySelectorAll('.player-tiles');
+        playerTiles.forEach(element => {
+            element.innerHTML = '';
+        });
+    }
+    
+    // 初始化牌池
+    function initializeTilePool() {
+        gameState.tilePool = [];
+        
+        // 添加26个字母，每个4张
+        for (let i = 65; i <= 90; i++) {
+            const letter = String.fromCharCode(i);
+            for (let j = 0; j < 4; j++) {
+                gameState.tilePool.push(letter);
+            }
+        }
+        
+        // 洗牌
+        shuffleTilePool();
+    }
+    
+    // 洗牌
+    function shuffleTilePool() {
+        for (let i = gameState.tilePool.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [gameState.tilePool[i], gameState.tilePool[j]] = [gameState.tilePool[j], gameState.tilePool[i]];
+        }
+    }
+    
+    // 发牌
+    function dealTiles() {
+        // 庄家(玩家1)摸14张，其他玩家摸13张
+        for (let i = 0; i < 14; i++) {
+            if (i < 13 || gameState.currentPlayer === 0) {
+                for (let j = 0; j < gameState.players.length; j++) {
+                    if (i === 13 && j !== 0) continue;
+                    
+                    if (gameState.tilePool.length > 0) {
+                        const tile = gameState.tilePool.pop();
+                        gameState.players[j].tiles.push(tile);
+                    }
+                }
+            }
+        }
+        
+        // 对玩家手牌按字母顺序排序
+        for (let i = 0; i < gameState.players.length; i++) {
+            gameState.players[i].tiles.sort();
+        }
+    }
+    
+    // 更新UI
+    function updateUI() {
+        // 更新牌池剩余数量
+        document.getElementById('pool-remaining').textContent = gameState.tilePool.length;
+        
+        // 更新玩家手牌
+        updatePlayerTiles();
+        
+        // 更新当前玩家
+        updateCurrentPlayer();
+        
+        // 更新分数
+        updateScore();
+        
+        // 更新弃牌区
+        updateDiscardPile();
+    }
+    
+    // 更新玩家手牌显示
+    function updatePlayerTiles() {
+        const playerTileContainers = document.querySelectorAll('.player-tiles');
+        
+        for (let i = 0; i < gameState.players.length; i++) {
+            const container = playerTileContainers[i];
+            container.innerHTML = '';
+            
+            if (i === 0) { // 玩家1（当前玩家）显示真实手牌
+                gameState.players[i].tiles.forEach((tile, index) => {
+                    const tileElement = document.createElement('div');
+                    tileElement.className = `mahjong-tile tile-${tile}`;
+                    
+                    // 添加字母显示的span
+                    const letterSpan = document.createElement('span');
+                    letterSpan.textContent = tile;
+                    tileElement.appendChild(letterSpan);
+                    
+                    // 设置数据属性和选中状态
+                    tileElement.dataset.index = index;
+                    tileElement.dataset.letter = tile;
+                    
+                    if (gameState.selectedTiles.includes(index)) {
+                        tileElement.classList.add('selected');
+                    }
+                    
+                    tileElement.addEventListener('click', () => selectTile(index));
+                    container.appendChild(tileElement);
+                });
+            } else { // 其他玩家显示牌背
+                for (let j = 0; j < gameState.players[i].tiles.length; j++) {
+                    const tileElement = document.createElement('div');
+                    tileElement.className = 'mahjong-tile';
+                    container.appendChild(tileElement);
+                }
+            }
+        }
+    }
+    
+    // 更新当前玩家指示
+    function updateCurrentPlayer() {
+        const playerContainers = document.querySelectorAll('.player');
+        playerContainers.forEach((container, index) => {
+            if (index === gameState.currentPlayer) {
+                container.classList.add('current');
+            } else {
+                container.classList.remove('current');
+            }
+        });
+        
+        // 更新当前玩家名称显示在游戏状态面板中
+        const score = gameState.players[0].score;
+        document.querySelector('.player-1 .player-score').textContent = score;
+        document.querySelector('.player-2 .player-score').textContent = gameState.players[1].score;
+        document.querySelector('.player-3 .player-score').textContent = gameState.players[2].score;
+        document.querySelector('.player-4 .player-score').textContent = gameState.players[3].score;
+    }
+    
+    // 更新分数
+    function updateScore() {
+        // 通过updateCurrentPlayer函数实现
+    }
+    
+    // 更新弃牌区
+    function updateDiscardPile() {
+        const discardContainer = document.querySelector('.discard-tiles');
+        discardContainer.innerHTML = '';
+        
+        gameState.discardPile.forEach(tile => {
+            const tileElement = document.createElement('div');
+            tileElement.className = `mahjong-tile tile-${tile}`;
+            
+            // 添加字母显示的span
+            const letterSpan = document.createElement('span');
+            letterSpan.textContent = tile;
+            tileElement.appendChild(letterSpan);
+            
+            discardContainer.appendChild(tileElement);
+        });
+    }
+    
+    // 启用游戏控制
+    function enableGameControls() {
+        // 重置计时器
+        const timerNumber = document.querySelector('.timer-number');
+        if (timerNumber) {
+            timerNumber.textContent = '30';
+        }
+        
+        if (gameState.currentPlayer === 0) {
+            document.querySelector('.action-draw').disabled = false;
+            document.querySelector('.action-discard').disabled = true;
+            document.querySelector('.action-win').disabled = true;
+        } else {
+            document.querySelector('.action-draw').disabled = true;
+            document.querySelector('.action-discard').disabled = true;
+            document.querySelector('.action-win').disabled = true;
+        }
+    }
+    
+    // 选择牌
+    function selectTile(index) {
+        const selectedIndex = gameState.selectedTiles.indexOf(index);
+        
+        if (selectedIndex === -1) {
+            gameState.selectedTiles.push(index);
+        } else {
+            gameState.selectedTiles.splice(selectedIndex, 1);
+        }
+        
+        updatePlayerTiles();
+        
+        // 如果有选中的牌，启用出牌按钮
+        if (gameState.selectedTiles.length > 0) {
+            document.querySelector('.action-discard').disabled = false;
+        } else {
+            document.querySelector('.action-discard').disabled = true;
+        }
+        
+        // 检查是否可以组成单词并启用胡牌按钮
+        checkWinCondition();
+    }
+    
+    // 摸牌
+    function drawTile() {
+        if (gameState.tilePool.length > 0) {
+            const tile = gameState.tilePool.pop();
+            gameState.players[gameState.currentPlayer].tiles.push(tile);
+            
+            // 对玩家手牌按字母顺序排序
+            gameState.players[gameState.currentPlayer].tiles.sort();
+            
+            // 更新UI
+            updateUI();
+            
+            // 禁用摸牌按钮，启用出牌按钮
+            document.querySelector('.action-draw').disabled = true;
+            document.querySelector('.action-discard').disabled = false;
+            
+            // 更新计时器
+            const timerNumber = document.querySelector('.timer-number');
+            if (timerNumber) {
+                timerNumber.textContent = '30';
+            }
+        } else {
+            // 牌池已空，游戏结束
+            showGameResult('牌池已空，游戏结束！');
+        }
+    }
+    
+    // 出牌
+    function discardTile() {
+        if (gameState.selectedTiles.length > 0) {
+            // 取最后选中的牌
+            const index = gameState.selectedTiles[gameState.selectedTiles.length - 1];
+            const tile = gameState.players[gameState.currentPlayer].tiles[index];
+            
+            // 从手牌中移除
+            gameState.players[gameState.currentPlayer].tiles.splice(index, 1);
+            
+            // 添加到弃牌堆
+            gameState.discardPile.push(tile);
+            gameState.lastDiscarded = tile;
+            
+            // 添加动画效果
+            const tileElement = document.createElement('div');
+            tileElement.className = `mahjong-tile tile-${tile}`;
+            tileElement.style.animation = 'discardAnimation 0.5s ease-out';
+            
+            // 添加字母显示的span
+            const letterSpan = document.createElement('span');
+            letterSpan.textContent = tile;
+            tileElement.appendChild(letterSpan);
+            
+            // 将弃牌添加到弃牌堆中
+            const discardContainer = document.querySelector('.discard-tiles');
+            if (discardContainer) {
+                discardContainer.appendChild(tileElement);
+                
+                // 如果弃牌太多，清除一些旧牌
+                if (discardContainer.children.length > 25) {
+                    discardContainer.removeChild(discardContainer.firstChild);
+                }
+            }
+            
+            // 清空选中
+            gameState.selectedTiles = [];
+            
+            // 更新UI
+            updateUI();
+            
+            // 轮到下一个玩家
+            gameState.currentPlayer = (gameState.currentPlayer + 1) % gameState.players.length;
+            updateCurrentPlayer();
+            
+            // 更新控制按钮状态
+            enableGameControls();
+            
+            // 模拟AI玩家行动
+            if (gameState.currentPlayer !== 0) {
+                setTimeout(simulateAIPlayerAction, 1000);
+            }
+        }
+    }
+    
+    // 吃牌（声明单词）
+    function claimTile() {
+        // 实现吃牌功能
+        alert('吃牌功能待实现');
+    }
+    
+    // 碰牌（三张相同）
+    function claimTriple() {
+        // 实现碰牌功能
+        alert('碰牌功能待实现');
+    }
+    
+    // 胡牌
+    function declareWin() {
+        const wordElements = document.querySelectorAll('.formed-word');
+        const words = Array.from(wordElements).map(el => el.textContent);
+        
+        // 验证单词
+        const validWords = validateWords(words);
+        
+        if (validWords) {
+            // 计算得分
+            const score = calculateScore(words);
+            gameState.players[0].score += score;
+            
+            showGameResult(`恭喜你胡牌成功！获得 ${score} 分`);
+            
+            // 游戏结束
+            gameState.gameStarted = false;
+            document.querySelector('.action-draw').disabled = true;
+            document.querySelector('.action-discard').disabled = true;
+            document.querySelector('.action-win').disabled = true;
+        } else {
+            alert('胡牌失败，请检查你的单词组合！');
+        }
+    }
+    
+    // 检查胡牌条件
+    function checkWinCondition() {
+        // 提取选中的牌
+        const selectedLetters = gameState.selectedTiles.map(index => 
+            gameState.players[0].tiles[index]);
+        
+        // 至少需要2个字母才能组成单词
+        if (selectedLetters.length < 2) {
+            document.querySelector('.action-win').disabled = true;
+            return;
+        }
+        
+        // 组成的单词
+        const word = selectedLetters.join('').toLowerCase();
+        
+        // 简单词典检查（实际应使用更完整的词典）
+        const commonWords = [
+            'cat', 'dog', 'run', 'book', 'apple', 'note', 'banana', 'elephant', 
+            'happy', 'sad', 'game', 'play', 'work', 'school', 'home', 'friend'
+        ];
+        
+        if (commonWords.includes(word)) {
+            document.querySelector('.action-win').disabled = false;
+        } else {
+            document.querySelector('.action-win').disabled = true;
+        }
+    }
+    
+    // 检查单词
+    function checkWord() {
+        const input = document.querySelector('.word-check');
+        const result = document.querySelector('.dictionary-result');
+        
+        if (input && result) {
+            const word = input.value.trim().toLowerCase();
+            
+            if (word) {
+                // 简单词典检查（实际应使用更完整的词典）
+                const commonWords = [
+                    'cat', 'dog', 'run', 'book', 'apple', 'note', 'banana', 'elephant', 
+                    'happy', 'sad', 'game', 'play', 'work', 'school', 'home', 'friend'
+                ];
+                
+                if (commonWords.includes(word)) {
+                    result.innerHTML = `<span class="valid-word">"${word}" 是有效单词</span>`;
+                } else {
+                    result.innerHTML = `<span class="invalid-word">"${word}" 不是有效单词</span>`;
+                }
+            } else {
+                result.innerHTML = '';
+            }
+        }
+    }
+    
+    // 验证单词
+    function validateWords(words) {
+        // 实际应使用更完整的词典
+        const commonWords = [
+            'cat', 'dog', 'run', 'book', 'apple', 'note', 'banana', 'elephant', 
+            'happy', 'sad', 'game', 'play', 'work', 'school', 'home', 'friend'
+        ];
+        
+        return words.every(word => commonWords.includes(word.toLowerCase()));
+    }
+    
+    // 计算得分
+    function calculateScore(words) {
+        let score = 20; // 基础胡牌分
+        
+        words.forEach(word => {
+            const length = word.length;
+            
+            if (length >= 3 && length <= 4) {
+                score += 10;
+            } else if (length >= 5 && length <= 6) {
+                score += 20;
+            } else if (length >= 7) {
+                score += 30;
+            }
+        });
+        
+        return score;
+    }
+    
+    // 模拟AI玩家行动
+    function simulateAIPlayerAction() {
+        // 简化的AI行动：摸牌然后随机弃一张
+        if (gameState.tilePool.length > 0) {
+            // 摸牌
+            const tile = gameState.tilePool.pop();
+            gameState.players[gameState.currentPlayer].tiles.push(tile);
+            
+            // 随机选择一张牌弃掉
+            const randomIndex = Math.floor(Math.random() * gameState.players[gameState.currentPlayer].tiles.length);
+            const discardedTile = gameState.players[gameState.currentPlayer].tiles[randomIndex];
+            gameState.players[gameState.currentPlayer].tiles.splice(randomIndex, 1);
+            
+            // 添加到弃牌堆
+            gameState.discardPile.push(discardedTile);
+            gameState.lastDiscarded = discardedTile;
+            
+            // 更新UI
+            updateUI();
+            
+            // 轮到下一个玩家
+            gameState.currentPlayer = (gameState.currentPlayer + 1) % gameState.players.length;
+            updateCurrentPlayer();
+            
+            // 更新控制按钮状态
+            enableGameControls();
+            
+            // 如果还是AI玩家，继续模拟
+            if (gameState.currentPlayer !== 0) {
+                setTimeout(simulateAIPlayerAction, 1000);
+            }
+        } else {
+            // 牌池已空，游戏结束
+            showGameResult('牌池已空，游戏结束！');
+        }
+    }
+    
+    // 显示/隐藏规则面板
+    function toggleRulesPanel() {
+        const rulesPanel = document.querySelector('.game-rules-panel');
+        if (rulesPanel) {
+            if (rulesPanel.style.display === 'none' || rulesPanel.style.display === '') {
+                rulesPanel.style.display = 'block';
+            } else {
+                rulesPanel.style.display = 'none';
+            }
+        }
+    }
+    
+    // 显示/隐藏词典面板
+    function toggleDictionaryPanel() {
+        const dictionaryPanel = document.querySelector('.dictionary-panel');
+        if (dictionaryPanel) {
+            if (dictionaryPanel.style.display === 'none' || dictionaryPanel.style.display === '') {
+                dictionaryPanel.style.display = 'block';
+            } else {
+                dictionaryPanel.style.display = 'none';
+            }
+        }
+    }
+    
+    // 显示游戏结果
+    function showGameResult(message) {
+        // 创建结果面板
+        const resultPanel = document.createElement('div');
+        resultPanel.className = 'game-result-panel';
+        resultPanel.innerHTML = `
+            <div class="result-content">
+                <h3>游戏结果</h3>
+                <p>${message}</p>
+                <div class="player-scores">
+                    <div class="player-score-item">
+                        <span>玩家1:</span>
+                        <span>${gameState.players[0].score}</span>
+                    </div>
+                    <div class="player-score-item">
+                        <span>玩家2:</span>
+                        <span>${gameState.players[1].score}</span>
+                    </div>
+                    <div class="player-score-item">
+                        <span>玩家3:</span>
+                        <span>${gameState.players[2].score}</span>
+                    </div>
+                    <div class="player-score-item">
+                        <span>玩家4:</span>
+                        <span>${gameState.players[3].score}</span>
+                    </div>
+                </div>
+                <button class="new-round-btn">开始新局</button>
+            </div>
+        `;
+        
+        document.querySelector('.english-mahjong-game').appendChild(resultPanel);
+        
+        // 绑定新局按钮
+        resultPanel.querySelector('.new-round-btn').addEventListener('click', function() {
+            resultPanel.remove();
+            startNewMahjongGame();
+        });
+    }
+} 

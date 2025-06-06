@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>创始人 Ray Geng - 火花课堂</title>
+    <!-- 引入Font Awesome图标 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 引入Google字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- 引入Swiper轮播 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
+    <!-- 引入AOS动画库 -->
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <!-- 引入Lightbox库 -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css" rel="stylesheet">
+    <!-- 自定义CSS -->
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* 创始人页面特定样式 */
+        .founder-hero {
+            background: linear-gradient(135deg, #FF6B35 0%, #FF9E5D 100%);
+            color: #fff;
+            padding: 75px 0 50px; /* 进一步减少上内边距 */
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.5) 0%, rgba(255, 193, 7, 0.3) 100%);
+            z-index: 1;
+        }
+        
+        .founder-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><polygon fill="rgba(255,255,255,0.15)" points="0,100 100,0 100,100"/></svg>');
+            background-size: cover;
+        }
+        
+        /* 添加动态元素 */
+        .sparks {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            overflow: hidden;
+        }
+        
+        .spark {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 10px rgba(255, 193, 7, 0.8), 0 0 20px rgba(255, 107, 53, 0.6);
+            animation: sparkle 4s infinite ease-in-out;
+        }
+        
+        .spark-1 {
+            top: 15%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+        
+        .spark-2 {
+            top: 25%;
+            right: 15%;
+            animation-delay: 1s;
+        }
+        
+        .spark-3 {
+            bottom: 20%;
+            left: 20%;
+            animation-delay: 2s;
+        }
+        
+        .spark-4 {
+            bottom: 30%;
+            right: 20%;
+            animation-delay: 1.5s;
+        }
+        
+        .spark-5 {
+            top: 40%;
+            left: 30%;
+            animation-delay: 0.5s;
+        }
+        
+        @keyframes sparkle {
+            0%, 100% { 
+                transform: scale(1);
+                opacity: 0.4;
+            }
+            50% { 
+                transform: scale(1.5);
+                opacity: 1;
+            }
+        }
+        
+        .founder-hero .container {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .founder-profile {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 40px;
+            margin-bottom: 30px;
+        }
+        
+        .founder-avatar {
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 5px solid #fff;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+        
+        .founder-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .founder-info {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .founder-info h1 {
+            font-size: 36px;
+            margin-bottom: 5px;
+            position: relative;
+            display: inline-block;
+            color: #ffffff;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        }
+        
+        .founder-info h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: #ffffff;
+        }
+        
+        .founder-title {
+            font-size: 22px;
+            margin-bottom: 20px;
+            padding-top: 15px;
+            color: #ffffff;
+            font-weight: 600;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        }
+        
+        .founder-intro-wrapper {
+            background-color: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            padding: 5px;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .founder-intro {
+            line-height: 1.8;
+            font-size: 17px;
+            margin-bottom: 0;
+            padding: 15px;
+            color: #ffffff;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
+            background-color: rgba(255, 107, 53, 0.1);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .section-header {
+            margin: 60px 0 30px;
+            position: relative;
+            color: #FF6B35;
+            font-size: 28px;
+        }
+        
+        .section-header::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background: #FF9E5D;
+        }
+        
+        .achievement-list, .skills-list {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        
+        .achievement-list li, .skills-list li {
+            padding: 15px 0;
+            border-bottom: 1px dashed rgba(255, 107, 53, 0.2);
+            position: relative;
+            padding-left: 30px;
+            color: #444;
+            transition: all 0.3s ease;
+        }
+        
+        .achievement-list li:hover, .skills-list li:hover {
+            transform: translateX(5px);
+            color: #FF6B35;
+            background-color: rgba(255, 158, 93, 0.05);
+            border-radius: 5px;
+            padding-left: 35px;
+        }
+        
+        .achievement-list li::before, .skills-list li::before {
+            content: "\f058";
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900;
+            color: #FF9E5D;
+            position: absolute;
+            left: 0;
+        }
+        
+        .achievement-list li a {
+            color: #FF6B35;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .achievement-list li a:hover {
+            color: #FF9E5D;
+            text-decoration: underline;
+        }
+        
+        .vision-section {
+            background-color: #f9f9f9;
+            padding: 70px 0;
+            margin-top: 50px;
+        }
+        
+        .vision-container {
+            background: #fff;
+            border-radius: 10px;
+            padding: 40px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.05);
+        }
+        
+        .vision-title {
+            font-size: 24px;
+            color: #FF6B35;
+            margin-bottom: 20px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .vision-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background: #FF9E5D;
+        }
+        
+        .contact-section {
+            margin-top: 50px;
+            padding: 30px 0 70px;
+        }
+        
+        .contact-card {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 25px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-bottom: 20px;
+        }
+        
+        .contact-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .contact-icon {
+            font-size: 30px;
+            color: #FF6B35;
+            background: rgba(255, 107, 53, 0.1);
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+        
+        .contact-info {
+            flex: 1;
+        }
+        
+        .contact-info h3 {
+            margin: 0 0 5px;
+            font-size: 20px;
+            color: #333;
+        }
+        
+        .contact-info p {
+            margin: 0;
+            color: #666;
+        }
+        
+        .contact-info a {
+            color: #FF6B35;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .contact-info a:hover {
+            color: #FF9E5D;
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            .founder-profile {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .founder-avatar {
+                margin: 0 auto;
+            }
+            
+            .founder-info h1::after {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            
+            .section-header {
+                text-align: center;
+            }
+            
+            .section-header::after {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            
+            .vision-title {
+                text-align: center;
+                display: block;
+            }
+            
+            .vision-title::after {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+        }
+        
+        /* 生活掠影照片炫酷悬停效果 */
+        .photo-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            height: 0;
+            padding-bottom: 133.33%;
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.5s ease;
+        }
+        
+        .photo-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(255, 107, 53, 0.3);
+            z-index: 5;
+        }
+        
+        .photo-item a {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+            overflow: hidden;
+        }
+        
+        .photo-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.7s ease;
+        }
+        
+        .photo-item:hover img {
+            transform: scale(1.08);
+        }
+        
+        /* 模态框样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        
+        .modal-content {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            overflow: hidden;
+            animation: modalFadeIn 0.5s ease forwards;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding-bottom: 30px;
+        }
+
+        /* 添加模态框动画 */
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* 添加登录/注册模态框背景 */
+        .login-modal-bg, .signup-modal-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 250, 245, 0.95) 100%);
+            opacity: 0.9;
+        }
+
+        /* 添加火花装饰 */
+        .spark-decoration {
+            position: absolute;
+            z-index: -1;
+            border-radius: 50%;
+            background: var(--spark-gradient);
+            opacity: 0.05;
+        }
+
+        .spark-modal-1 {
+            width: 200px;
+            height: 200px;
+            top: -100px;
+            right: -100px;
+        }
+
+        .spark-modal-2 {
+            width: 250px;
+            height: 250px;
+            bottom: -150px;
+            left: -100px;
+        }
+
+        /* 表单消息样式 */
+        .form-message {
+            display: none;
+            padding: 10px 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .message-success {
+            background-color: rgba(76, 175, 80, 0.1);
+            color: #4CAF50;
+            border-left: 4px solid #4CAF50;
+        }
+
+        .message-error {
+            background-color: rgba(244, 67, 54, 0.1);
+            color: #F44336;
+            border-left: 4px solid #F44336;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* 调整按钮大小，稍微增大 */
+        .nav .btn {
+            padding: 0.7rem 1.5rem;
+            font-size: 0.9rem;
+        }
+        
+        /* 修改导航栏背景色，使用渐变效果与主题更匹配 */
+        .header {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 250, 245, 0.95) 100%);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 2px 15px rgba(255, 107, 53, 0.1);
+            border-bottom: 1px solid rgba(255, 107, 53, 0.05);
+        }
+        
+        /* 为登录按钮设置投影效果 */
+        .btn-login {
+            box-shadow: 0 4px 10px rgba(255, 107, 53, 0.15);
+        }
+        
+        /* 为注册按钮设置更强调的样式 */
+        .btn.anime-btn.btn-signup {
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.25);
+        }
+        
+        /* 添加样式使社交登录按钮更现代化 */
+        .social-login-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+            width: 100%;
+            flex-wrap: wrap;
+        }
+        
+        .btn-social {
+            padding: 8px 15px;
+            border-radius: 4px;
+            border: 1px solid #e0e0e0;
+            background: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            width: 120px;
+            margin-bottom: 10px;
+            z-index: 10;
+            position: relative;
+        }
+        
+        .btn-social:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+        }
+        
+        .btn-social.google {
+            color: #4285F4;
+            border-color: #4285F4;
+        }
+        
+        .btn-social.wechat {
+            color: #ffffff;
+            background-color: #07C160;
+            border-color: #07C160;
+        }
+        
+        /* 确保社交登录部分始终可见 */
+        .social-login {
+            margin-top: 20px;
+            margin-bottom: 20px;
+            width: 100%;
+            position: relative;
+            z-index: 5;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <header class="header">
+        <div class="container header-container">
+            <div class="logo">
+                <h1><i class="fas fa-fire"></i> 火花课堂 <span class="sub-logo">Spark Academy</span></h1>
+            </div>
+            <nav class="nav">
+                <a href="index.html" class="nav-link">首页</a>
+                <a href="about.html" class="nav-link">学院介绍</a>
+                <a href="founder.html" class="nav-link active">创始人</a>
+                <a href="contact.html" class="nav-link">联系我们</a>
+                <a href="help.html" class="nav-link">帮助中心</a>
+                <button class="btn btn-login">登录</button>
+                <button class="btn anime-btn btn-signup">注册</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 创始人介绍头部 -->
+    <section class="founder-hero">
+        <div class="hero-overlay"></div>
+        <div class="sparks">
+            <div class="spark spark-1"></div>
+            <div class="spark spark-2"></div>
+            <div class="spark spark-3"></div>
+            <div class="spark spark-4"></div>
+            <div class="spark spark-5"></div>
+        </div>
+        <div class="container">
+            <div class="founder-profile" data-aos="fade-up">
+                <div class="founder-avatar">
+                    <img src="images/4.jpg" alt="Ray Geng">
+                </div>
+                <div class="founder-info">
+                    <h1>Ray Geng（耿琦睿）</h1>
+                    <div class="founder-title">Ray享科技有限公司 创始人 & CEO</div>
+                    <div class="founder-intro-wrapper">
+                        <p class="founder-intro">
+                            作为Ray享科技有限公司的创始人兼首席执行官，Ray Geng（耿琦睿）始终致力于通过科技创新推动行业发展，致力于让每个人都享受到科技的福利。凭借深厚的技术背景与丰富的行业经验，他带领公司不断突破技术壁垒，为企业和个人提供高效、智能的数字化解决方案。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 专业背景 -->
+    <section class="section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 offset-lg-2">
+                    <h2 class="section-header" data-aos="fade-up">专业背景</h2>
+                    <p data-aos="fade-up" data-aos-delay="100">
+                        Ray Geng 就业于河南师范大学计算机科学与技术专业，专注于软件开发、人工智能与分布式计算。拥有扎实的技术功底，在微服务架构、高并发处理、大数据分析以及机器学习等领域具备丰富的实战经验。
+                    </p>
+                    
+                    <h2 class="section-header" data-aos="fade-up">行业成就</h2>
+                    <ul class="achievement-list" data-aos="fade-up" data-aos-delay="100">
+                        <li>中国自动化学会（<a href="https://www.caa.org.cn/" target="_blank" rel="noopener">Chinese Association of Automation, CAA</a>）会员</li>
+                        <li>以第一作者身份在 IEEE 发表学术论文<a href="https://ieeexplore.ieee.org/search/searchresult.jsp?newsearch=true&searchWithin=%22First%20Name%22:qirui&searchWithin=%22Last%20Name%22:geng" target="_blank" rel="noopener">《Study on Improved YOLOv10 Face Recognition Based on WF-EMA》</a>，推动前沿科技落地应用</li>
+                        <li>参与河南师范大学软件测试课题编写，并在中国慕课（MOOC）平台上可检索</li>
+                        <li>曾参与新加坡南洋理工大学的软件工程与机器人自动化设计与开发项目，积累国际化视野</li>
+                        <li>2023 年完成德国法兰克福应用技术大学（Frankfurt University of Applied Sciences）的企业架构管理项目</li>
+                        <li>受邀作为 CTIS–IOMA'25 智能优化方法及应用 论坛的报告嘉宾，在 2025年5月27-29日 召开的 第三届计算机技术与信息科学国际学术会议（CTIS2025） 上分享研究成果</li>
+                        <li>主持国家级大学生创新创业训练项目，并推动其顺利结项</li>
+                        <li>荣获多项国内外顶级科技竞赛奖项，包括中国机器人及人工智能大赛国家级二等奖、RoboCup 机器人世界杯中国赛国家级三等奖、全国大学生数学建模大赛省级二等奖等</li>
+                    </ul>
+                    
+                    <h2 class="section-header" data-aos="fade-up">技术专长</h2>
+                    <ul class="skills-list" data-aos="fade-up" data-aos-delay="100">
+                        <li><strong>人工智能与大数据：</strong>深度学习（TensorFlow / PyTorch）、自然语言处理（NLP）、计算机视觉（OpenCV）、大数据分析与挖掘</li>
+                        <li><strong>优化算法：</strong>目标检测优化（YOLO系列）、加权指数移动平均（WF-EMA）、模型压缩与加速</li>
+                        <li><strong>企业级架构：</strong>微服务架构（Spring Cloud / gRPC）、分布式系统、高并发架构</li>
+                        <li><strong>云计算与DevOps：</strong>Kubernetes、Docker、AWS / 阿里云 / GCP</li>
+                        <li><strong>软件开发：</strong>Java、Python、C++、Go，擅长高性能后端开发</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 生活掠影 -->
+    <section id="life-gallery" style="padding: 70px 0; background-color: #f8f8f8;">
+        <div class="container">
+            <h2 class="section-header" data-aos="fade-up">生活掠影</h2>
+            
+            <!-- 2行3列的图片网格，无动画效果 -->
+            <div class="photo-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); grid-gap: 15px; margin: 0 auto; max-width: 1200px;" data-aos="fade-up" data-aos-delay="200">
+                <!-- 第一行 -->
+                <div class="photo-item">
+                    <a href="images/1.jpg" data-lightbox="life-photos">
+                        <img src="images/1.jpg" alt="生活掠影">
+                    </a>
+                </div>
+                
+                <div class="photo-item">
+                    <a href="images/2.jpg" data-lightbox="life-photos">
+                        <img src="images/2.jpg" alt="生活掠影">
+                    </a>
+                </div>
+                
+                <div class="photo-item">
+                    <a href="images/3.jpg" data-lightbox="life-photos">
+                        <img src="images/3.jpg" alt="生活掠影">
+                    </a>
+                </div>
+                
+                <!-- 第二行 -->
+                <div class="photo-item">
+                    <a href="images/5.jpg" data-lightbox="life-photos">
+                        <img src="images/5.jpg" alt="生活掠影">
+                    </a>
+                </div>
+                
+                <div class="photo-item">
+                    <a href="images/6.jpg" data-lightbox="life-photos">
+                        <img src="images/6.jpg" alt="生活掠影">
+                    </a>
+                </div>
+                
+                <div class="photo-item">
+                    <a href="images/7.jpg" data-lightbox="life-photos">
+                        <img src="images/7.jpg" alt="生活掠影">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 企业愿景 -->
+    <section class="vision-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 offset-lg-2">
+                    <div class="vision-container" data-aos="fade-up">
+                        <h3 class="vision-title">企业愿景</h3>
+                        <p>
+                            Ray享科技秉承"技术赋能，价值创造"的理念，专注于打造高效、智能、安全的技术产品，助力企业在数字化时代实现跨越式发展。Ray Geng 领导的团队不断创新，为客户提供从软件开发到人工智能应用的全方位解决方案，立志成为行业领先的科技企业。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 联系方式 -->
+    <section class="contact-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 offset-lg-2">
+                    <h2 class="section-header" data-aos="fade-up">联系方式</h2>
+                    
+                    <div class="contact-card" data-aos="fade-up" data-aos-delay="100">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="contact-info">
+                            <h3>邮箱</h3>
+                            <p><a href="mailto:gengqirui1@gmail.com">gengqirui1@gmail.com</a></p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-card" data-aos="fade-up" data-aos-delay="200">
+                        <div class="contact-icon">
+                            <i class="fas fa-globe"></i>
+                        </div>
+                        <div class="contact-info">
+                            <h3>公司官网</h3>
+                            <p>Ray享科技</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3><i class="fas fa-fire"></i> 火花课堂 <span class="sub-logo">Spark Academy</span></h3>
+                    <p>火花课堂旨在为学生提供高质量的教育资源和学习体验。</p>
+                    <div class="social-icons">
+                        <a href="https://v.douyin.com/fbsQP2e5xIo/" class="social-icon" target="_blank" rel="noopener"><i class="fab fa-tiktok"></i></a>
+                        <a href="https://youtube.com/@ray-ik8tr?si=uC9HqfGqC2LCD5pH" class="social-icon" target="_blank" rel="noopener"><i class="fab fa-youtube"></i></a>
+                        <a href="https://www.facebook.com/share/16PpZYKL4q/?mibextid=qi2Omg" class="social-icon" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://b23.tv/7oI59PW" class="social-icon" target="_blank" rel="noopener"><i class="fab fa-bilibili"></i></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>关于我们</h4>
+                    <ul>
+                        <li><a href="about.html">学院介绍</a></li>
+                        <li><a href="founder.html">创始人介绍</a></li>
+                        <li><a href="contact.html">联系我们</a></li>
+                        <li><a href="help.html">帮助中心</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>学习资源</h4>
+                    <ul>
+                        <li><a href="courses.html">课程目录</a></li>
+                        <li><a href="ai-teachers.html">AI教师团队</a></li>
+                        <li><a href="teacher-resources.html">教师资源</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 火花课堂 (Spark Academy). 版权所有，未经许可不得转载。</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 登录模态框 -->
+    <div class="modal" id="login-modal">
+        <div class="modal-content">
+            <div class="login-modal-bg"></div>
+            <div class="spark-decoration spark-modal-1"></div>
+            <div class="spark-decoration spark-modal-2"></div>
+            <span class="close-modal">&times;</span>
+            <h2><i class="fas fa-fire"></i> 登录火花课堂</h2>
+            
+            <div class="form-message message-success" id="login-success">
+                <i class="fas fa-check-circle"></i> 登录成功，欢迎回来！
+            </div>
+            
+            <div class="form-message message-error" id="login-error">
+                <i class="fas fa-times-circle"></i> 登录失败，请检查您的邮箱和密码。
+            </div>
+            
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="login-email">邮箱</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-envelope input-icon"></i>
+                        <input type="email" id="login-email" placeholder="请输入您的邮箱" required autocomplete="email">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">密码</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input type="password" id="login-password" placeholder="请输入您的密码" required autocomplete="current-password">
+                        <i class="fas fa-eye-slash toggle-password"></i>
+                    </div>
+                </div>
+                <div class="form-options">
+                    <div class="remember-me">
+                        <input type="checkbox" id="remember-me">
+                        <label for="remember-me">记住我</label>
+                    </div>
+                    <a href="#" class="forgot-password">忘记密码？</a>
+                </div>
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-sign-in-alt"></i> 登录
+                </button>
+                <div class="social-login">
+                    <p>使用其他方式登录</p>
+                    <div class="social-login-buttons">
+                        <button type="button" class="btn-social google">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" style="vertical-align: middle; margin-right: 8px;">
+                                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                            </svg>
+                            Google
+                        </button>
+                        <button type="button" class="btn-social wechat">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" style="vertical-align: middle; margin-right: 8px;">
+                                <path fill="#FFFFFF" d="M8.691 2C4.918 2 2 4.919 2 8.691c0 2.087 1.147 3.934 2.87 5.111l-.714 2.148 2.499-.833c.892.248 1.834.382 2.817.382 3.773 0 6.691-2.919 6.691-6.692C16.172 4.919 13.254 2 9.48 2H8.691zm.774 4.15c.595 0 .992.396.992.992 0 .595-.397.992-.992.992-.595 0-1.191-.396-1.191-.992 0-.595.596-.992 1.191-.992zm-4.159 1.983c-.595 0-1.19-.396-1.19-.992 0-.595.595-.992 1.19-.992.595 0 .992.397.992.992 0 .596-.397.992-.992.992z"/>
+                                <path fill="#FFFFFF" d="M22 15.309c0-3.173-3.173-5.749-6.75-5.749-3.773 0-6.75 2.576-6.75 5.75 0 3.173 2.977 5.749 6.75 5.749.784 0 1.568-.099 2.352-.297l2.148.694-.595-1.744C20.73 18.137 22 16.866 22 15.31zm-8.91-1.09c-.399 0-.798-.4-.798-.8 0-.398.4-.798.799-.798.498 0 .797.4.797.799 0 .399-.299.798-.797.798zm4.254 0c-.398 0-.797-.4-.797-.8 0-.398.399-.798.797-.798.398 0 .798.4.798.799 0 .399-.4.798-.798.798z"/>
+                            </svg>
+                            微信登录
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 注册模态框 -->
+    <div class="modal" id="signup-modal">
+        <div class="modal-content">
+            <div class="signup-modal-bg"></div>
+            <div class="spark-decoration spark-modal-1"></div>
+            <div class="spark-decoration spark-modal-2"></div>
+            <span class="close-modal">&times;</span>
+            <h2><i class="fas fa-fire"></i> 加入火花课堂</h2>
+            
+            <div class="form-message message-success" id="signup-success">
+                <i class="fas fa-check-circle"></i> 注册成功！欢迎加入火花课堂！
+            </div>
+            
+            <div class="form-message message-error" id="signup-error">
+                <i class="fas fa-times-circle"></i> 注册失败，请检查您的注册信息。
+            </div>
+            
+            <form id="signup-form">
+                <div class="form-group">
+                    <label for="signup-nickname">个性昵称</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-user-astronaut input-icon"></i>
+                        <input type="text" id="signup-nickname" placeholder="请设置您的昵称" required autocomplete="nickname">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="signup-email">邮箱</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-envelope input-icon"></i>
+                        <input type="email" id="signup-email" placeholder="请输入您的邮箱" required autocomplete="email">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="signup-phone">联系电话</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-phone input-icon"></i>
+                        <input type="tel" id="signup-phone" placeholder="请输入您的联系电话" required autocomplete="tel">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="signup-password">密码</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input type="password" id="signup-password" placeholder="请设置您的密码" required autocomplete="new-password">
+                        <i class="fas fa-eye-slash toggle-password"></i>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="signup-confirm-password">确认密码</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input type="password" id="signup-confirm-password" placeholder="请再次输入密码" required autocomplete="new-password">
+                        <i class="fas fa-eye-slash toggle-password"></i>
+                    </div>
+                </div>
+                <div class="form-checkbox">
+                    <input type="checkbox" id="privacy-policy" required>
+                    <label for="privacy-policy">我已阅读并同意<a href="#">用户协议</a>和<a href="#">隐私政策</a></label>
+                </div>
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-rocket"></i> 开启学习之旅
+                </button>
+                
+                <div class="social-login">
+                    <p>使用其他方式登录</p>
+                    <div class="social-login-buttons">
+                        <button type="button" class="btn-social google">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" style="vertical-align: middle; margin-right: 8px;">
+                                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                            </svg>
+                            Google
+                        </button>
+                        <button type="button" class="btn-social wechat">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" style="vertical-align: middle; margin-right: 8px;">
+                                <path fill="#FFFFFF" d="M8.691 2C4.918 2 2 4.919 2 8.691c0 2.087 1.147 3.934 2.87 5.111l-.714 2.148 2.499-.833c.892.248 1.834.382 2.817.382 3.773 0 6.691-2.919 6.691-6.692C16.172 4.919 13.254 2 9.48 2H8.691zm.774 4.15c.595 0 .992.396.992.992 0 .595-.397.992-.992.992-.595 0-1.191-.396-1.191-.992 0-.595.596-.992 1.191-.992zm-4.159 1.983c-.595 0-1.19-.396-1.19-.992 0-.595.595-.992 1.19-.992.595 0 .992.397.992.992 0 .596-.397.992-.992.992z"/>
+                                <path fill="#FFFFFF" d="M22 15.309c0-3.173-3.173-5.749-6.75-5.749-3.773 0-6.75 2.576-6.75 5.75 0 3.173 2.977 5.749 6.75 5.749.784 0 1.568-.099 2.352-.297l2.148.694-.595-1.744C20.73 18.137 22 16.866 22 15.31zm-8.91-1.09c-.399 0-.798-.4-.798-.8 0-.398.4-.798.799-.798.498 0 .797.4.797.799 0 .399-.299.798-.797.798zm4.254 0c-.398 0-.797-.4-.797-.8 0-.398.399-.798.797-.798.398 0 .798.4.798.799 0 .399-.4.798-.798.798z"/>
+                            </svg>
+                            微信登录
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 引入Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+    <!-- 引入AOS JS -->
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <!-- 引入Lightbox JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js"></script>
+    <!-- 自定义JS -->
+    <script src="script.js"></script>
+    <script src="login.js"></script>
+    <script>
+        // 初始化AOS动画库
+        document.addEventListener('DOMContentLoaded', function() {
+            AOS.init({
+                duration: 800,
+                easing: 'ease-out',
+                once: true
+            });
+            
+            // 初始化Lightbox
+            lightbox.option({
+                'resizeDuration': 200,
+                'wrapAround': true,
+                'albumLabel': "照片 %1 / %2",
+                'fadeDuration': 300
+            });
+        });
+    </script>
+</body>
+</html> 

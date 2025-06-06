@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>课程目录 - 火花课堂</title>
+    <!-- 引入Font Awesome图标 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 引入Google字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- 引入AOS动画库 -->
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <!-- 自定义CSS -->
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* 课程页面特定样式 */
+        .course-categories {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 2rem 0;
+        }
+        
+        .category-tab {
+            padding: 10px 20px;
+            background: white;
+            border-radius: 30px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: var(--transition);
+            border: 1px solid transparent;
+        }
+        
+        .category-tab.active {
+            background: var(--anime-gradient);
+            color: white;
+            font-weight: 500;
+        }
+        
+        .category-tab:hover:not(.active) {
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+        
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 2rem;
+        }
+        
+        .course-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: var(--transition);
+            position: relative;
+        }
+        
+        .course-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(255, 107, 53, 0.15);
+        }
+        
+        .course-image {
+            height: 180px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .course-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .course-card:hover .course-image img {
+            transform: scale(1.1);
+        }
+        
+        .course-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--anime-gradient);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            z-index: 1;
+        }
+        
+        .course-content {
+            padding: 20px;
+        }
+        
+        .course-title {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--dark-text);
+            line-height: 1.4;
+        }
+        
+        .course-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            color: var(--gray-text);
+            font-size: 0.9rem;
+        }
+        
+        .course-meta {
+            display: flex;
+            justify-content: space-between;
+            padding-top: 15px;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .course-rating {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .course-rating i {
+            color: #FFD700;
+        }
+        
+        .course-cta {
+            color: var(--primary-color);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: var(--transition);
+        }
+        
+        .course-cta:hover {
+            color: var(--anime-accent);
+            transform: translateX(3px);
+        }
+        
+        .section-header {
+            position: relative;
+            padding: 75px 0 40px;
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.1) 0%, rgba(253, 94, 83, 0.05) 100%);
+            margin-bottom: 50px;
+            overflow: hidden;
+        }
+        
+        .section-header::before, .section-header::after {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: var(--anime-gradient);
+            opacity: 0.05;
+            z-index: 0;
+        }
+        
+        .section-header::before {
+            top: -100px;
+            left: -100px;
+        }
+        
+        .section-header::after {
+            bottom: -100px;
+            right: -100px;
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+        
+        .header-content h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--dark-text);
+        }
+        
+        .header-content p {
+            max-width: 700px;
+            margin: 0 auto;
+            color: var(--gray-text);
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 3rem;
+        }
+        
+        .page-link {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        
+        .page-link.active {
+            background: var(--anime-gradient);
+            color: white;
+        }
+        
+        .page-link:hover:not(.active) {
+            background: rgba(255, 107, 53, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        /* 模态框样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        
+        .modal-content {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            overflow: hidden;
+            animation: modalFadeIn 0.5s ease forwards;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding-bottom: 30px;
+        }
+
+        /* 添加模态框动画 */
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* 添加登录/注册模态框背景 */
+        .login-modal-bg, .signup-modal-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 250, 245, 0.95) 100%);
+            opacity: 0.9;
+        }
+
+        /* 添加火花装饰 */
+        .spark-decoration {
+            position: absolute;
+            z-index: -1;
+            border-radius: 50%;
+            background: var(--spark-gradient);
+            opacity: 0.05;
+        }
+
+        .spark-modal-1 {
+            width: 200px;
+            height: 200px;
+            top: -100px;
+            right: -100px;
+        }
+
+        .spark-modal-2 {
+            width: 250px;
+            height: 250px;
+            bottom: -150px;
+            left: -100px;
+        }
+
+        /* 表单消息样式 */
+        .form-message {
+            display: none;
+            padding: 10px 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .message-success {
+            background-color: rgba(76, 175, 80, 0.1);
+            color: #4CAF50;
+            border-left: 4px solid #4CAF50;
+        }
+
+        .message-error {
+            background-color: rgba(244, 67, 54, 0.1);
+            color: #F44336;
+            border-left: 4px solid #F44336;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* 调整按钮大小，稍微增大 */
+        .nav .btn {
+            padding: 0.7rem 1.5rem;
+            font-size: 0.9rem;
+        }
+        
+        /* 修改导航栏背景色，使用渐变效果与主题更匹配 */
+        .header {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 250, 245, 0.95) 100%);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 2px 15px rgba(255, 107, 53, 0.1);
+            border-bottom: 1px solid rgba(255, 107, 53, 0.05);
+        }
+        
+        /* 为登录按钮设置投影效果 */
+        .btn-login {
+            box-shadow: 0 4px 10px rgba(255, 107, 53, 0.15);
+        }
+        
+        /* 为注册按钮设置更强调的样式 */
+        .btn.anime-btn.btn-signup {
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.25);
+        }
+        
+        /* 添加样式使社交登录按钮更现代化 */
+        .social-login-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+            width: 100%;
+            flex-wrap: wrap;
+        }
+        
+        .btn-social {
+            padding: 8px 15px;
+            border-radius: 4px;
+            border: 1px solid #e0e0e0;
+            background: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            width: 120px;
+            margin-bottom: 10px;
+            z-index: 10;
+            position: relative;
+        }
+        
+        .btn-social:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+        }
+        
+        .btn-social.google {
+            color: #4285F4;
+            border-color: #4285F4;
+        }
+        
+        .btn-social.wechat {
+            color: #ffffff;
+            background-color: #07C160;
+            border-color: #07C160;
+        }
+        
+        /* 确保社交登录部分始终可见 */
+        .social-login {
+            margin-top: 20px;
+            margin-bottom: 20px;
+            width: 100%;
+            position: relative;
+            z-index: 5;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <header class="header">
+        <div class="container header-container">
+            <div class="logo">
+                <h1><a href="index.html"><i class="fas fa-fire"></i> 火花课堂 <span class="sub-logo">Spark Academy</span></a></h1>
+            </div>
+            <nav class="nav">
+                <a href="index.html" class="nav-link">首页</a>
+                <a href="about.html" class="nav-link">学院介绍</a>
+                <a href="founder.html" class="nav-link">创始人</a>
+                <a href="contact.html" class="nav-link">联系我们</a>
+                <a href="help.html" class="nav-link">帮助中心</a>
+                <button class="btn btn-login">登录</button>
+                <button class="btn anime-btn btn-signup">注册</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 页面头部区域 -->
+    <section class="section-header">
+        <div class="container header-content">
+            <h1 data-aos="fade-up"><i class="fas fa-book"></i> 课程目录</h1>
+            <p data-aos="fade-up" data-aos-delay="100">探索我们精心设计的课程，每一门都由AI教师团队授课，让学习变得有趣而高效</p>
+        </div>
+    </section>
+
+    <!-- 主要内容区 -->
+    <section class="course-catalog">
+        <div class="container">
+            <!-- 课程分类标签 -->
+            <div class="course-categories" data-aos="fade-up">
+                <div class="category-tab active">所有课程</div>
+                <div class="category-tab">编程技术</div>
+                <div class="category-tab">人工智能</div>
+                <div class="category-tab">数学科学</div>
+                <div class="category-tab">语言文学</div>
+                <div class="category-tab">艺术创作</div>
+            </div>
+            
+            <!-- 课程列表 -->
+            <div class="courses-grid">
+                <!-- 课程卡片1 -->
+                <div class="course-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="course-image">
+                        <img src="https://placehold.co/600x400/FF6B35/FFFFFF?text=编程启蒙" alt="编程启蒙">
+                        <div class="course-badge">热门</div>
+                    </div>
+                    <div class="course-content">
+                        <h3 class="course-title">Python编程启蒙：从零到创造</h3>
+                        <div class="course-info">
+                            <span><i class="fas fa-clock"></i> 12周课程</span>
+                            <span><i class="fas fa-users"></i> 2,345名学员</span>
+                        </div>
+                        <p>为8-12岁的孩子量身定制，通过有趣的项目和游戏，培养孩子的逻辑思维和创造力。</p>
+                        <div class="course-meta">
+                            <div class="course-rating">
+                                <i class="fas fa-star"></i>
+                                <span>4.9 (128)</span>
+                            </div>
+                            <a href="#" class="course-cta">查看详情 <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 课程卡片2 -->
+                <div class="course-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="course-image">
+                        <img src="https://placehold.co/600x400/3CAEA3/FFFFFF?text=AI基础" alt="人工智能基础">
+                    </div>
+                    <div class="course-content">
+                        <h3 class="course-title">人工智能基础：探索未来科技</h3>
+                        <div class="course-info">
+                            <span><i class="fas fa-clock"></i> 8周课程</span>
+                            <span><i class="fas fa-users"></i> 1,890名学员</span>
+                        </div>
+                        <p>带领13-16岁青少年了解AI的基本概念、应用场景，并动手训练简单的AI模型。</p>
+                        <div class="course-meta">
+                            <div class="course-rating">
+                                <i class="fas fa-star"></i>
+                                <span>4.8 (96)</span>
+                            </div>
+                            <a href="#" class="course-cta">查看详情 <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 课程卡片3 -->
+                <div class="course-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="course-image">
+                        <img src="https://placehold.co/600x400/FFBD69/333333?text=高等数学" alt="高等数学">
+                        <div class="course-badge">新课程</div>
+                    </div>
+                    <div class="course-content">
+                        <h3 class="course-title">高等数学：从基础到大学先修</h3>
+                        <div class="course-info">
+                            <span><i class="fas fa-clock"></i> 16周课程</span>
+                            <span><i class="fas fa-users"></i> 1,230名学员</span>
+                        </div>
+                        <p>为高中生提供大学先修课程，通过3D可视化和交互式练习，轻松掌握微积分基础。</p>
+                        <div class="course-meta">
+                            <div class="course-rating">
+                                <i class="fas fa-star"></i>
+                                <span>4.7 (82)</span>
+                            </div>
+                            <a href="#" class="course-cta">查看详情 <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 课程卡片4 -->
+                <div class="course-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="course-image">
+                        <img src="https://placehold.co/600x400/FD5E53/FFFFFF?text=创意写作" alt="创意写作">
+                    </div>
+                    <div class="course-content">
+                        <h3 class="course-title">创意写作：发现文字的力量</h3>
+                        <div class="course-info">
+                            <span><i class="fas fa-clock"></i> 10周课程</span>
+                            <span><i class="fas fa-users"></i> 945名学员</span>
+                        </div>
+                        <p>培养10-15岁学生的写作兴趣和技巧，通过AI导师实时反馈，提升写作水平和表达能力。</p>
+                        <div class="course-meta">
+                            <div class="course-rating">
+                                <i class="fas fa-star"></i>
+                                <span>4.9 (74)</span>
+                            </div>
+                            <a href="#" class="course-cta">查看详情 <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 课程卡片5 -->
+                <div class="course-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="course-image">
+                        <img src="https://placehold.co/600x400/7B68EE/FFFFFF?text=数字艺术" alt="数字艺术">
+                    </div>
+                    <div class="course-content">
+                        <h3 class="course-title">数字艺术创作：像专业设计师一样思考</h3>
+                        <div class="course-info">
+                            <span><i class="fas fa-clock"></i> 8周课程</span>
+                            <span><i class="fas fa-users"></i> 785名学员</span>
+                        </div>
+                        <p>结合AI工具与传统设计原则，教授12-18岁学生掌握数字设计和创意表达的基本技能。</p>
+                        <div class="course-meta">
+                            <div class="course-rating">
+                                <i class="fas fa-star"></i>
+                                <span>4.8 (63)</span>
+                            </div>
+                            <a href="#" class="course-cta">查看详情 <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 课程卡片6 -->
+                <div class="course-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="course-image">
+                        <img src="https://placehold.co/600x400/202945/FFFFFF?text=物理实验" alt="虚拟物理实验室">
+                        <div class="course-badge">VR体验</div>
+                    </div>
+                    <div class="course-content">
+                        <h3 class="course-title">虚拟物理实验室：沉浸式物理学习</h3>
+                        <div class="course-info">
+                            <span><i class="fas fa-clock"></i> 14周课程</span>
+                            <span><i class="fas fa-users"></i> 675名学员</span>
+                        </div>
+                        <p>利用VR/AR技术，让初中至高中学生在虚拟环境中进行物理实验，直观理解物理规律。</p>
+                        <div class="course-meta">
+                            <div class="course-rating">
+                                <i class="fas fa-star"></i>
+                                <span>4.9 (57)</span>
+                            </div>
+                            <a href="#" class="course-cta">查看详情 <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 分页 -->
+            <div class="pagination" data-aos="fade-up">
+                <div class="page-link active">1</div>
+                <div class="page-link">2</div>
+                <div class="page-link">3</div>
+                <div class="page-link"><i class="fas fa-ellipsis-h"></i></div>
+                <div class="page-link">8</div>
+                <div class="page-link"><i class="fas fa-angle-right"></i></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3><i class="fas fa-fire"></i> 火花课堂 <span class="sub-logo">Spark Academy</span></h3>
+                    <p>火花课堂旨在为学生提供高质量的教育资源和学习体验。</p>
+                    <div class="social-icons">
+                        <a href="https://v.douyin.com/fbsQP2e5xIo/" class="social-icon" target="_blank" rel="noopener"><i class="fab fa-tiktok"></i></a>
+                        <a href="https://youtube.com/@ray-ik8tr?si=uC9HqfGqC2LCD5pH" class="social-icon" target="_blank" rel="noopener"><i class="fab fa-youtube"></i></a>
+                        <a href="https://www.facebook.com/share/16PpZYKL4q/?mibextid=qi2Omg" class="social-icon" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://b23.tv/7oI59PW" class="social-icon" target="_blank" rel="noopener"><i class="fab fa-bilibili"></i></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>关于我们</h4>
+                    <ul>
+                        <li><a href="about.html">学院介绍</a></li>
+                        <li><a href="founder.html">创始人介绍</a></li>
+                        <li><a href="contact.html">联系我们</a></li>
+                        <li><a href="help.html">帮助中心</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>学习资源</h4>
+                    <ul>
+                        <li><a href="courses.html">课程目录</a></li>
+                        <li><a href="ai-teachers.html">AI教师团队</a></li>
+                        <li><a href="teacher-resources.html">教师资源</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 火花课堂 (Spark Academy). 版权所有，未经许可不得转载。</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 登录模态框 -->
+    <div class="modal" id="login-modal">
+        <div class="modal-content">
+            <div class="login-modal-bg"></div>
+            <div class="spark-decoration spark-modal-1"></div>
+            <div class="spark-decoration spark-modal-2"></div>
+            <span class="close-modal">&times;</span>
+            <h2><i class="fas fa-fire"></i> 登录火花课堂</h2>
+            
+            <div class="form-message message-success" id="login-success">
+                <i class="fas fa-check-circle"></i> 登录成功，欢迎回来！
+            </div>
+            
+            <div class="form-message message-error" id="login-error">
+                <i class="fas fa-times-circle"></i> 登录失败，请检查您的邮箱和密码。
+            </div>
+            
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="login-email">邮箱</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-envelope input-icon"></i>
+                        <input type="email" id="login-email" placeholder="请输入您的邮箱" required autocomplete="email">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">密码</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input type="password" id="login-password" placeholder="请输入您的密码" required autocomplete="current-password">
+                        <i class="fas fa-eye-slash toggle-password"></i>
+                    </div>
+                </div>
+                <div class="form-options">
+                    <div class="remember-me">
+                        <input type="checkbox" id="remember-me">
+                        <label for="remember-me">记住我</label>
+                    </div>
+                    <a href="#" class="forgot-password">忘记密码？</a>
+                </div>
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-sign-in-alt"></i> 登录
+                </button>
+                <div class="social-login">
+                    <p>使用其他方式登录</p>
+                    <div class="social-login-buttons">
+                        <button type="button" class="btn-social google">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" style="vertical-align: middle; margin-right: 8px;">
+                                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                            </svg>
+                            Google
+                        </button>
+                        <button type="button" class="btn-social wechat">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" style="vertical-align: middle; margin-right: 8px;">
+                                <path fill="#FFFFFF" d="M8.691 2C4.918 2 2 4.919 2 8.691c0 2.087 1.147 3.934 2.87 5.111l-.714 2.148 2.499-.833c.892.248 1.834.382 2.817.382 3.773 0 6.691-2.919 6.691-6.692C16.172 4.919 13.254 2 9.48 2H8.691zm.774 4.15c.595 0 .992.396.992.992 0 .595-.397.992-.992.992-.595 0-1.191-.396-1.191-.992 0-.595.596-.992 1.191-.992zm-4.159 1.983c-.595 0-1.19-.396-1.19-.992 0-.595.595-.992 1.19-.992.595 0 .992.397.992.992 0 .596-.397.992-.992.992z"/>
+                                <path fill="#FFFFFF" d="M22 15.309c0-3.173-3.173-5.749-6.75-5.749-3.773 0-6.75 2.576-6.75 5.75 0 3.173 2.977 5.749 6.75 5.749.784 0 1.568-.099 2.352-.297l2.148.694-.595-1.744C20.73 18.137 22 16.866 22 15.31zm-8.91-1.09c-.399 0-.798-.4-.798-.8 0-.398.4-.798.799-.798.498 0 .797.4.797.799 0 .399-.299.798-.797.798zm4.254 0c-.398 0-.797-.4-.797-.8 0-.398.399-.798.797-.798.398 0 .798.4.798.799 0 .399-.4.798-.798.798z"/>
+                            </svg>
+                            微信登录
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 注册模态框 -->
+    <div class="modal" id="signup-modal">
+        <div class="modal-content">
+            <div class="signup-modal-bg"></div>
+            <div class="spark-decoration spark-modal-1"></div>
+            <div class="spark-decoration spark-modal-2"></div>
+            <span class="close-modal">&times;</span>
+            <h2><i class="fas fa-fire"></i> 加入火花课堂</h2>
+            
+            <div class="form-message message-success" id="signup-success">
+                <i class="fas fa-check-circle"></i> 注册成功！欢迎加入火花课堂！
+            </div>
+            
+            <div class="form-message message-error" id="signup-error">
+                <i class="fas fa-times-circle"></i> 注册失败，请检查您的注册信息。
+            </div>
+            
+            <form id="signup-form">
+                <div class="form-group">
+                    <label for="signup-nickname">个性昵称</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-user-astronaut input-icon"></i>
+                        <input type="text" id="signup-nickname" placeholder="请设置您的昵称" required autocomplete="nickname">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="signup-email">邮箱</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-envelope input-icon"></i>
+                        <input type="email" id="signup-email" placeholder="请输入您的邮箱" required autocomplete="email">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="signup-phone">联系电话</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-phone input-icon"></i>
+                        <input type="tel" id="signup-phone" placeholder="请输入您的联系电话" required autocomplete="tel">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="signup-password">密码</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input type="password" id="signup-password" placeholder="请设置您的密码" required autocomplete="new-password">
+                        <i class="fas fa-eye-slash toggle-password"></i>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="signup-confirm-password">确认密码</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input type="password" id="signup-confirm-password" placeholder="请再次输入密码" required autocomplete="new-password">
+                        <i class="fas fa-eye-slash toggle-password"></i>
+                    </div>
+                </div>
+                <div class="form-checkbox">
+                    <input type="checkbox" id="privacy-policy" required>
+                    <label for="privacy-policy">我已阅读并同意<a href="#">用户协议</a>和<a href="#">隐私政策</a></label>
+                </div>
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-rocket"></i> 开启学习之旅
+                </button>
+                
+                <div class="social-login">
+                    <p>使用其他方式登录</p>
+                    <div class="social-login-buttons">
+                        <button type="button" class="btn-social google">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" style="vertical-align: middle; margin-right: 8px;">
+                                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                            </svg>
+                            Google
+                        </button>
+                        <button type="button" class="btn-social wechat">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" style="vertical-align: middle; margin-right: 8px;">
+                                <path fill="#FFFFFF" d="M8.691 2C4.918 2 2 4.919 2 8.691c0 2.087 1.147 3.934 2.87 5.111l-.714 2.148 2.499-.833c.892.248 1.834.382 2.817.382 3.773 0 6.691-2.919 6.691-6.692C16.172 4.919 13.254 2 9.48 2H8.691zm.774 4.15c.595 0 .992.396.992.992 0 .595-.397.992-.992.992-.595 0-1.191-.396-1.191-.992 0-.595.596-.992 1.191-.992zm-4.159 1.983c-.595 0-1.19-.396-1.19-.992 0-.595.595-.992 1.19-.992.595 0 .992.397.992.992 0 .596-.397.992-.992.992z"/>
+                                <path fill="#FFFFFF" d="M22 15.309c0-3.173-3.173-5.749-6.75-5.749-3.773 0-6.75 2.576-6.75 5.75 0 3.173 2.977 5.749 6.75 5.749.784 0 1.568-.099 2.352-.297l2.148.694-.595-1.744C20.73 18.137 22 16.866 22 15.31zm-8.91-1.09c-.399 0-.798-.4-.798-.8 0-.398.4-.798.799-.798.498 0 .797.4.797.799 0 .399-.299.798-.797.798zm4.254 0c-.398 0-.797-.4-.797-.8 0-.398.399-.798.797-.798.398 0 .798.4.798.799 0 .399-.4.798-.798.798z"/>
+                            </svg>
+                            微信登录
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 引入AOS JS -->
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <!-- 自定义JS -->
+    <script src="script.js"></script>
+    <script src="login.js"></script>
+    <script>
+        // 初始化AOS动画库
+        document.addEventListener('DOMContentLoaded', function() {
+            AOS.init({
+                duration: 800,
+                easing: 'ease-out',
+                once: true
+            });
+            
+            // 课程分类标签切换效果
+            const categoryTabs = document.querySelectorAll('.category-tab');
+            categoryTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    categoryTabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html> 

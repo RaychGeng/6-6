@@ -1,0 +1,31 @@
+{
+  "name": "huohuo-ketang",
+  "version": "1.0.0",
+  "description": "火花课堂 - 智慧动漫教育平台",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "compress-images": "node compress-images.js",
+    "cleanup": "node cleanup.js",
+    "prepare-github": "npm run compress-images && npm run cleanup",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "engines": {
+    "node": ">=14"
+  },
+  "keywords": [
+    "education",
+    "ai",
+    "learning"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.3",
+    "sharp": "^0.33.2"
+  }
+}

@@ -1,0 +1,1000 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>鍒涘浜?Ray Geng - 鐏姳璇惧爞</title>
+    <!-- 寮曞叆Font Awesome鍥炬爣 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 寮曞叆Google瀛椾綋 -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- 寮曞叆Swiper杞挱 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
+    <!-- 寮曞叆AOS鍔ㄧ敾搴?-->
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <!-- 寮曞叆Lightbox搴?-->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css" rel="stylesheet">
+    <!-- 鑷畾涔塁SS -->
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* 鍒涘浜洪〉闈㈢壒瀹氭牱寮?*/
+        .founder-hero {
+            background: linear-gradient(135deg, #FF6B35 0%, #FF9E5D 100%);
+            color: #fff;
+            padding: 75px 0 50px; /* 杩涗竴姝ュ噺灏戜笂鍐呰竟璺?*/
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.5) 0%, rgba(255, 193, 7, 0.3) 100%);
+            z-index: 1;
+        }
+        
+        .founder-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><polygon fill="rgba(255,255,255,0.15)" points="0,100 100,0 100,100"/></svg>');
+            background-size: cover;
+        }
+        
+        /* 娣诲姞鍔ㄦ€佸厓绱?*/
+        .sparks {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            overflow: hidden;
+        }
+        
+        .spark {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 10px rgba(255, 193, 7, 0.8), 0 0 20px rgba(255, 107, 53, 0.6);
+            animation: sparkle 4s infinite ease-in-out;
+        }
+        
+        .spark-1 {
+            top: 15%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+        
+        .spark-2 {
+            top: 25%;
+            right: 15%;
+            animation-delay: 1s;
+        }
+        
+        .spark-3 {
+            bottom: 20%;
+            left: 20%;
+            animation-delay: 2s;
+        }
+        
+        .spark-4 {
+            bottom: 30%;
+            right: 20%;
+            animation-delay: 1.5s;
+        }
+        
+        .spark-5 {
+            top: 40%;
+            left: 30%;
+            animation-delay: 0.5s;
+        }
+        
+        @keyframes sparkle {
+            0%, 100% { 
+                transform: scale(1);
+                opacity: 0.4;
+            }
+            50% { 
+                transform: scale(1.5);
+                opacity: 1;
+            }
+        }
+        
+        .founder-hero .container {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .founder-profile {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 40px;
+            margin-bottom: 30px;
+        }
+        
+        .founder-avatar {
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 5px solid #fff;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+        
+        .founder-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .founder-info {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .founder-info h1 {
+            font-size: 36px;
+            margin-bottom: 5px;
+            position: relative;
+            display: inline-block;
+            color: #ffffff;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        }
+        
+        .founder-info h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: #ffffff;
+        }
+        
+        .founder-title {
+            font-size: 22px;
+            margin-bottom: 20px;
+            padding-top: 15px;
+            color: #ffffff;
+            font-weight: 600;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        }
+        
+        .founder-intro-wrapper {
+            background-color: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            padding: 5px;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .founder-intro {
+            line-height: 1.8;
+            font-size: 17px;
+            margin-bottom: 0;
+            padding: 15px;
+            color: #ffffff;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
+            background-color: rgba(255, 107, 53, 0.1);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .section-header {
+            margin: 60px 0 30px;
+            position: relative;
+            color: #FF6B35;
+            font-size: 28px;
+        }
+        
+        .section-header::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background: #FF9E5D;
+        }
+        
+        .achievement-list, .skills-list {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        
+        .achievement-list li, .skills-list li {
+            padding: 15px 0;
+            border-bottom: 1px dashed rgba(255, 107, 53, 0.2);
+            position: relative;
+            padding-left: 30px;
+            color: #444;
+            transition: all 0.3s ease;
+        }
+        
+        .achievement-list li:hover, .skills-list li:hover {
+            transform: translateX(5px);
+            color: #FF6B35;
+            background-color: rgba(255, 158, 93, 0.05);
+            border-radius: 5px;
+            padding-left: 35px;
+        }
+        
+        .achievement-list li::before, .skills-list li::before {
+            content: "\f058";
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900;
+            color: #FF9E5D;
+            position: absolute;
+            left: 0;
+        }
+        
+        .achievement-list li a {
+            color: #FF6B35;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .achievement-list li a:hover {
+            color: #FF9E5D;
+            text-decoration: underline;
+        }
+        
+        .vision-section {
+            background-color: #f9f9f9;
+            padding: 70px 0;
+            margin-top: 50px;
+        }
+        
+        .vision-container {
+            background: #fff;
+            border-radius: 10px;
+            padding: 40px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.05);
+        }
+        
+        .vision-title {
+            font-size: 24px;
+            color: #FF6B35;
+            margin-bottom: 20px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .vision-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background: #FF9E5D;
+        }
+        
+        .contact-section {
+            margin-top: 50px;
+            padding: 30px 0 70px;
+        }
+        
+        .contact-card {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 25px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-bottom: 20px;
+        }
+        
+        .contact-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .contact-icon {
+            font-size: 30px;
+            color: #FF6B35;
+            background: rgba(255, 107, 53, 0.1);
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+        
+        .contact-info {
+            flex: 1;
+        }
+        
+        .contact-info h3 {
+            margin: 0 0 5px;
+            font-size: 20px;
+            color: #333;
+        }
+        
+        .contact-info p {
+            margin: 0;
+            color: #666;
+        }
+        
+        .contact-info a {
+            color: #FF6B35;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .contact-info a:hover {
+            color: #FF9E5D;
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            .founder-profile {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .founder-avatar {
+                margin: 0 auto;
+            }
+            
+            .founder-info h1::after {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            
+            .section-header {
+                text-align: center;
+            }
+            
+            .section-header::after {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            
+            .vision-title {
+                text-align: center;
+                display: block;
+            }
+            
+            .vision-title::after {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+        }
+        
+        /* 鐢熸椿鎺犲奖鐓х墖鐐叿鎮仠鏁堟灉 */
+        .photo-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            height: 0;
+            padding-bottom: 133.33%;
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.5s ease;
+        }
+        
+        .photo-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(255, 107, 53, 0.3);
+            z-index: 5;
+        }
+        
+        .photo-item a {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+            overflow: hidden;
+        }
+        
+        .photo-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.7s ease;
+        }
+        
+        .photo-item:hover img {
+            transform: scale(1.08);
+        }
+        
+        /* 妯℃€佹鏍峰紡 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        
+        .modal-content {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            overflow: hidden;
+            animation: modalFadeIn 0.5s ease forwards;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding-bottom: 30px;
+        }
+
+        /* 娣诲姞妯℃€佹鍔ㄧ敾 */
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* 娣诲姞鐧诲綍/娉ㄥ唽妯℃€佹鑳屾櫙 */
+        .login-modal-bg, .signup-modal-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 250, 245, 0.95) 100%);
+            opacity: 0.9;
+        }
+
+        /* 娣诲姞鐏姳瑁呴グ */
+        .spark-decoration {
+            position: absolute;
+            z-index: -1;
+            border-radius: 50%;
+            background: var(--spark-gradient);
+            opacity: 0.05;
+        }
+
+        .spark-modal-1 {
+            width: 200px;
+            height: 200px;
+            top: -100px;
+            right: -100px;
+        }
+
+        .spark-modal-2 {
+            width: 250px;
+            height: 250px;
+            bottom: -150px;
+            left: -100px;
+        }
+
+        /* 琛ㄥ崟娑堟伅鏍峰紡 */
+        .form-message {
+            display: none;
+            padding: 10px 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .message-success {
+            background-color: rgba(76, 175, 80, 0.1);
+            color: #4CAF50;
+            border-left: 4px solid #4CAF50;
+        }
+
+        .message-error {
+            background-color: rgba(244, 67, 54, 0.1);
+            color: #F44336;
+            border-left: 4px solid #F44336;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* 璋冩暣鎸夐挳澶у皬锛岀◢寰澶?*/
+        .nav .btn {
+            padding: 0.7rem 1.5rem;
+            font-size: 0.9rem;
+        }
+        
+        /* 淇敼瀵艰埅鏍忚儗鏅壊锛屼娇鐢ㄦ笎鍙樻晥鏋滀笌涓婚鏇村尮閰?*/
+        .header {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 250, 245, 0.95) 100%);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 2px 15px rgba(255, 107, 53, 0.1);
+            border-bottom: 1px solid rgba(255, 107, 53, 0.05);
+        }
+        
+        /* 涓虹櫥褰曟寜閽缃姇褰辨晥鏋?*/
+        .btn-login {
+            box-shadow: 0 4px 10px rgba(255, 107, 53, 0.15);
+        }
+        
+        /* 涓烘敞鍐屾寜閽缃洿寮鸿皟鐨勬牱寮?*/
+        .btn.anime-btn.btn-signup {
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.25);
+        }
+        
+        /* 娣诲姞鏍峰紡浣跨ぞ浜ょ櫥褰曟寜閽洿鐜颁唬鍖?*/
+        .social-login-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+            width: 100%;
+            flex-wrap: wrap;
+        }
+        
+        .btn-social {
+            padding: 8px 15px;
+            border-radius: 4px;
+            border: 1px solid #e0e0e0;
+            background: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            width: 120px;
+            margin-bottom: 10px;
+            z-index: 10;
+            position: relative;
+        }
+        
+        .btn-social:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+        }
+        
+        .btn-social.google {
+            color: #4285F4;
+            border-color: #4285F4;
+        }
+        
+        .btn-social.wechat {
+            color: #ffffff;
+            background-color: #07C160;
+            border-color: #07C160;
+        }
+        
+        /* 纭繚绀句氦鐧诲綍閮ㄥ垎濮嬬粓鍙 */
+        .social-login {
+            margin-top: 20px;
+            margin-bottom: 20px;
+            width: 100%;
+            position: relative;
+            z-index: 5;
+        }
+    </style>
+</head>
+<body>
+    <!-- 瀵艰埅鏍?-->
+    <header class="header">
+        <div class="container header-container">
+            <div class="logo">
+                <h1><i class="fas fa-fire"></i> 鐏姳璇惧爞 <span class="sub-logo">Spark Academy</span></h1>
+            </div>
+            <nav class="nav">
+                <a href="index.html" class="nav-link">棣栭〉</a>
+                <a href="about.html" class="nav-link">瀛﹂櫌浠嬬粛</a>
+                <a href="founder.html" class="nav-link active">鍒涘浜?/a>
+                <a href="contact.html" class="nav-link">鑱旂郴鎴戜滑</a>
+                <a href="help.html" class="nav-link">甯姪涓績</a>
+                <button class="btn btn-login">鐧诲綍</button>
+                <button class="btn anime-btn btn-signup">娉ㄥ唽</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 鍒涘浜轰粙缁嶅ご閮?-->
+    <section class="founder-hero">
+        <div class="hero-overlay"></div>
+        <div class="sparks">
+            <div class="spark spark-1"></div>
+            <div class="spark spark-2"></div>
+            <div class="spark spark-3"></div>
+            <div class="spark spark-4"></div>
+            <div class="spark spark-5"></div>
+        </div>
+        <div class="container">
+            <div class="founder-profile" data-aos="fade-up">
+                <div class="founder-avatar">
+                    <img src="images/4.jpg" alt="Ray Geng">
+                </div>
+                <div class="founder-info">
+                    <h1>Ray Geng锛堣€跨惁鐫匡級</h1>
+                    <div class="founder-title">Ray浜鎶€鏈夐檺鍏徃 鍒涘浜?& CEO</div>
+                    <div class="founder-intro-wrapper">
+                        <p class="founder-intro">
+                            浣滀负Ray浜鎶€鏈夐檺鍏徃鐨勫垱濮嬩汉鍏奸甯墽琛屽畼锛孯ay Geng锛堣€跨惁鐫匡級濮嬬粓鑷村姏浜庨€氳繃绉戞妧鍒涙柊鎺ㄥ姩琛屼笟鍙戝睍锛岃嚧鍔涗簬璁╂瘡涓汉閮戒韩鍙楀埌绉戞妧鐨勭鍒┿€傚嚟鍊熸繁鍘氱殑鎶€鏈儗鏅笌涓板瘜鐨勮涓氱粡楠岋紝浠栧甫棰嗗叕鍙镐笉鏂獊鐮存妧鏈鍨掞紝涓轰紒涓氬拰涓汉鎻愪緵楂樻晥銆佹櫤鑳界殑鏁板瓧鍖栬В鍐虫柟妗堛€?                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 涓撲笟鑳屾櫙 -->
+    <section class="section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 offset-lg-2">
+                    <h2 class="section-header" data-aos="fade-up">涓撲笟鑳屾櫙</h2>
+                    <p data-aos="fade-up" data-aos-delay="100">
+                        Ray Geng 姣曚笟浜庢渤鍗楀笀鑼冨ぇ瀛﹁绠楁満绉戝涓庢妧鏈笓涓氾紝涓撴敞浜庤蒋浠跺紑鍙戙€佷汉宸ユ櫤鑳戒笌鍒嗗竷寮忚绠椼€傛嫢鏈夋墡瀹炵殑鎶€鏈姛搴曪紝鍦ㄥ井鏈嶅姟鏋舵瀯銆侀珮骞跺彂澶勭悊銆佸ぇ鏁版嵁鍒嗘瀽浠ュ強鏈哄櫒瀛︿範绛夐鍩熷叿澶囦赴瀵岀殑瀹炴垬缁忛獙銆?                    </p>
+                    
+                    <h2 class="section-header" data-aos="fade-up">琛屼笟鎴愬氨</h2>
+                    <ul class="achievement-list" data-aos="fade-up" data-aos-delay="100">
+                        <li>浠ョ涓€浣滆€呰韩浠藉湪 IEEE 鍙戣〃瀛︽湳璁烘枃<a href="https://ieeexplore.ieee.org/search/searchresult.jsp?newsearch=true&searchWithin=%22First%20Name%22:qirui&searchWithin=%22Last%20Name%22:geng" target="_blank" rel="noopener">銆奡tudy on Improved YOLOv10 Face Recognition Based on WF-EMA銆?/a>锛屾帹鍔ㄥ墠娌跨鎶€钀藉湴搴旂敤</li>
+                        <li>鍙備笌娌冲崡甯堣寖澶у杞欢娴嬭瘯璇鹃缂栧啓锛屽苟鍦ㄤ腑鍥芥厱璇撅紙MOOC锛夊钩鍙颁笂鍙绱?/li>
+                        <li>鏇惧弬涓庢柊鍔犲潯鍗楁磱鐞嗗伐澶у鐨勮蒋浠跺伐绋嬩笌鏈哄櫒浜鸿嚜鍔ㄥ寲璁捐涓庡紑鍙戦」鐩紝绉疮鍥介檯鍖栬閲?/li>
+                        <li>2023 骞村畬鎴愬痉鍥芥硶鍏板厠绂忓簲鐢ㄦ妧鏈ぇ瀛︼紙Frankfurt University of Applied Sciences锛夌殑浼佷笟鏋舵瀯绠＄悊椤圭洰</li>
+                        <li>鍙楅個浣滀负 CTIS鈥揑OMA'25 鏅鸿兘浼樺寲鏂规硶鍙婂簲鐢?璁哄潧鐨勬姤鍛婂槈瀹撅紝鍦?2025骞?鏈?7-29鏃?鍙紑鐨?绗笁灞婅绠楁満鎶€鏈笌淇℃伅绉戝鍥介檯瀛︽湳浼氳锛圕TIS2025锛?涓婂垎浜爺绌舵垚鏋?/li>
+                        <li>涓绘寔鍥藉绾уぇ瀛︾敓鍒涙柊鍒涗笟璁粌椤圭洰锛屽苟鎺ㄥ姩鍏堕『鍒╃粨椤?/li>
+                        <li>鑽ｈ幏澶氶」鍥藉唴澶栭《绾х鎶€绔炶禌濂栭」锛屽寘鎷腑鍥芥満鍣ㄤ汉鍙婁汉宸ユ櫤鑳藉ぇ璧涘浗瀹剁骇浜岀瓑濂栥€丷oboCup 鏈哄櫒浜轰笘鐣屾澂涓浗璧涘浗瀹剁骇涓夌瓑濂栥€佸叏鍥藉ぇ瀛︾敓鏁板寤烘ā澶ц禌鐪佺骇浜岀瓑濂栫瓑</li>
+                    </ul>
+                    
+                    <h2 class="section-header" data-aos="fade-up">鎶€鏈笓闀?/h2>
+                    <ul class="skills-list" data-aos="fade-up" data-aos-delay="100">
+                        <li><strong>浜哄伐鏅鸿兘涓庡ぇ鏁版嵁锛?/strong>娣卞害瀛︿範锛圱ensorFlow / PyTorch锛夈€佽嚜鐒惰瑷€澶勭悊锛圢LP锛夈€佽绠楁満瑙嗚锛圤penCV锛夈€佸ぇ鏁版嵁鍒嗘瀽涓庢寲鎺?/li>
+                        <li><strong>浼樺寲绠楁硶锛?/strong>鐩爣妫€娴嬩紭鍖栵紙YOLO绯诲垪锛夈€佸姞鏉冩寚鏁扮Щ鍔ㄥ钩鍧囷紙WF-EMA锛夈€佹ā鍨嬪帇缂╀笌鍔犻€?/li>
+                        <li><strong>浼佷笟绾ф灦鏋勶細</strong>寰湇鍔℃灦鏋勶紙Spring Cloud / gRPC锛夈€佸垎甯冨紡绯荤粺銆侀珮骞跺彂鏋舵瀯</li>
+                        <li><strong>浜戣绠椾笌DevOps锛?/strong>Kubernetes銆丏ocker銆丄WS / 闃块噷浜?/ GCP</li>
+                        <li><strong>杞欢寮€鍙戯細</strong>Java銆丳ython銆丆++銆丟o锛屾搮闀块珮鎬ц兘鍚庣寮€鍙?/li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 鐢熸椿鎺犲奖 -->
+    <section id="life-gallery" style="padding: 70px 0; background-color: #f8f8f8;">
+        <div class="container">
+            <h2 class="section-header" data-aos="fade-up">鐢熸椿鎺犲奖</h2>
+            
+            <!-- 2琛?鍒楃殑鍥剧墖缃戞牸锛屾棤鍔ㄧ敾鏁堟灉 -->
+            <div class="photo-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); grid-gap: 15px; margin: 0 auto; max-width: 1200px;" data-aos="fade-up" data-aos-delay="200">
+                <!-- 绗竴琛?-->
+                <div class="photo-item">
+                    <a href="images/1.jpg" data-lightbox="life-photos">
+                        <img src="images/1.jpg" alt="鐢熸椿鎺犲奖">
+                    </a>
+                </div>
+                
+                <div class="photo-item">
+                    <a href="images/2.jpg" data-lightbox="life-photos">
+                        <img src="images/2.jpg" alt="鐢熸椿鎺犲奖">
+                    </a>
+                </div>
+                
+                <div class="photo-item">
+                    <a href="images/3.jpg" data-lightbox="life-photos">
+                        <img src="images/3.jpg" alt="鐢熸椿鎺犲奖">
+                    </a>
+                </div>
+                
+                <!-- 绗簩琛?-->
+                <div class="photo-item">
+                    <a href="images/5.jpg" data-lightbox="life-photos">
+                        <img src="images/5.jpg" alt="鐢熸椿鎺犲奖">
+                    </a>
+                </div>
+                
+                <div class="photo-item">
+                    <a href="images/6.jpg" data-lightbox="life-photos">
+                        <img src="images/6.jpg" alt="鐢熸椿鎺犲奖">
+                    </a>
+                </div>
+                
+                <div class="photo-item">
+                    <a href="images/7.jpg" data-lightbox="life-photos">
+                        <img src="images/7.jpg" alt="鐢熸椿鎺犲奖">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 浼佷笟鎰挎櫙 -->
+    <section class="vision-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 offset-lg-2">
+                    <div class="vision-container" data-aos="fade-up">
+                        <h3 class="vision-title">浼佷笟鎰挎櫙</h3>
+                        <p>
+                            Ray浜鎶€绉夋壙"鎶€鏈祴鑳斤紝浠峰€煎垱閫?鐨勭悊蹇碉紝涓撴敞浜庢墦閫犻珮鏁堛€佹櫤鑳姐€佸畨鍏ㄧ殑鎶€鏈骇鍝侊紝鍔╁姏浼佷笟鍦ㄦ暟瀛楀寲鏃朵唬瀹炵幇璺ㄨ秺寮忓彂灞曘€俁ay Geng 棰嗗鐨勫洟闃熶笉鏂垱鏂帮紝涓哄鎴锋彁渚涗粠杞欢寮€鍙戝埌浜哄伐鏅鸿兘搴旂敤鐨勫叏鏂逛綅瑙ｅ喅鏂规锛岀珛蹇楁垚涓鸿涓氶鍏堢殑绉戞妧浼佷笟銆?                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 鑱旂郴鏂瑰紡 -->
+    <section class="contact-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 offset-lg-2">
+                    <h2 class="section-header" data-aos="fade-up">鑱旂郴鏂瑰紡</h2>
+                    
+                    <div class="contact-card" data-aos="fade-up" data-aos-delay="100">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="contact-info">
+                            <h3>閭</h3>
+                            <p><a href="mailto:gengqirui1@gmail.com">gengqirui1@gmail.com</a></p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-card" data-aos="fade-up" data-aos-delay="200">
+                        <div class="contact-icon">
+                            <i class="fas fa-globe"></i>
+                        </div>
+                        <div class="contact-info">
+                            <h3>鍏徃瀹樼綉</h3>
+                            <p>Ray浜鎶€</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 椤佃剼 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3><i class="fas fa-fire"></i> 鐏姳璇惧爞 <span class="sub-logo">Spark Academy</span></h3>
+                    <p>鐏姳璇惧爞鏃ㄥ湪涓哄鐢熸彁渚涢珮璐ㄩ噺鐨勬暀鑲茶祫婧愬拰瀛︿範浣撻獙銆?/p>
+                    <div class="social-icons">
+                        <a href="https://v.douyin.com/fbsQP2e5xIo/" class="social-icon" target="_blank" rel="noopener"><i class="fab fa-tiktok"></i></a>
+                        <a href="https://youtube.com/@ray-ik8tr?si=uC9HqfGqC2LCD5pH" class="social-icon" target="_blank" rel="noopener"><i class="fab fa-youtube"></i></a>
+                        <a href="https://www.facebook.com/share/16PpZYKL4q/?mibextid=qi2Omg" class="social-icon" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://b23.tv/7oI59PW" class="social-icon" target="_blank" rel="noopener"><i class="fab fa-bilibili"></i></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>鍏充簬鎴戜滑</h4>
+                    <ul>
+                        <li><a href="about.html">瀛﹂櫌浠嬬粛</a></li>
+                        <li><a href="founder.html">鍒涘浜轰粙缁?/a></li>
+                        <li><a href="contact.html">鑱旂郴鎴戜滑</a></li>
+                        <li><a href="help.html">甯姪涓績</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>瀛︿範璧勬簮</h4>
+                    <ul>
+                        <li><a href="courses.html">璇剧▼鐩綍</a></li>
+                        <li><a href="ai-teachers.html">AI鏁欏笀鍥㈤槦</a></li>
+                        <li><a href="teacher-resources.html">鏁欏笀璧勬簮</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 鐏姳璇惧爞 (Spark Academy). 鐗堟潈鎵€鏈夛紝鏈粡璁稿彲涓嶅緱杞浇銆?/p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 鐧诲綍妯℃€佹 -->
+    <div class="modal" id="login-modal">
+        <div class="modal-content">
+            <div class="login-modal-bg"></div>
+            <div class="spark-decoration spark-modal-1"></div>
+            <div class="spark-decoration spark-modal-2"></div>
+            <span class="close-modal">&times;</span>
+            <h2><i class="fas fa-fire"></i> 鐧诲綍鐏姳璇惧爞</h2>
+            
+            <div class="form-message message-success" id="login-success">
+                <i class="fas fa-check-circle"></i> 鐧诲綍鎴愬姛锛屾杩庡洖鏉ワ紒
+            </div>
+            
+            <div class="form-message message-error" id="login-error">
+                <i class="fas fa-times-circle"></i> 鐧诲綍澶辫触锛岃妫€鏌ユ偍鐨勯偖绠卞拰瀵嗙爜銆?            </div>
+            
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="login-email">閭</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-envelope input-icon"></i>
+                        <input type="email" id="login-email" placeholder="璇疯緭鍏ユ偍鐨勯偖绠? required autocomplete="email">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">瀵嗙爜</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input type="password" id="login-password" placeholder="璇疯緭鍏ユ偍鐨勫瘑鐮? required autocomplete="current-password">
+                        <i class="fas fa-eye-slash toggle-password"></i>
+                    </div>
+                </div>
+                <div class="form-options">
+                    <div class="remember-me">
+                        <input type="checkbox" id="remember-me">
+                        <label for="remember-me">璁颁綇鎴?/label>
+                    </div>
+                    <a href="#" class="forgot-password">蹇樿瀵嗙爜锛?/a>
+                </div>
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-sign-in-alt"></i> 鐧诲綍
+                </button>
+                <div class="social-login">
+                    <p>浣跨敤鍏朵粬鏂瑰紡鐧诲綍</p>
+                    <div class="social-login-buttons">
+                        <button type="button" class="btn-social google">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" style="vertical-align: middle; margin-right: 8px;">
+                                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                            </svg>
+                            Google
+                        </button>
+                        <button type="button" class="btn-social wechat">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" style="vertical-align: middle; margin-right: 8px;">
+                                <path fill="#FFFFFF" d="M8.691 2C4.918 2 2 4.919 2 8.691c0 2.087 1.147 3.934 2.87 5.111l-.714 2.148 2.499-.833c.892.248 1.834.382 2.817.382 3.773 0 6.691-2.919 6.691-6.692C16.172 4.919 13.254 2 9.48 2H8.691zm.774 4.15c.595 0 .992.396.992.992 0 .595-.397.992-.992.992-.595 0-1.191-.396-1.191-.992 0-.595.596-.992 1.191-.992zm-4.159 1.983c-.595 0-1.19-.396-1.19-.992 0-.595.595-.992 1.19-.992.595 0 .992.397.992.992 0 .596-.397.992-.992.992z"/>
+                                <path fill="#FFFFFF" d="M22 15.309c0-3.173-3.173-5.749-6.75-5.749-3.773 0-6.75 2.576-6.75 5.75 0 3.173 2.977 5.749 6.75 5.749.784 0 1.568-.099 2.352-.297l2.148.694-.595-1.744C20.73 18.137 22 16.866 22 15.31zm-8.91-1.09c-.399 0-.798-.4-.798-.8 0-.398.4-.798.799-.798.498 0 .797.4.797.799 0 .399-.299.798-.797.798zm4.254 0c-.398 0-.797-.4-.797-.8 0-.398.399-.798.797-.798.398 0 .798.4.798.799 0 .399-.4.798-.798.798z"/>
+                            </svg>
+                            寰俊鐧诲綍
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 娉ㄥ唽妯℃€佹 -->
+    <div class="modal" id="signup-modal">
+        <div class="modal-content">
+            <div class="signup-modal-bg"></div>
+            <div class="spark-decoration spark-modal-1"></div>
+            <div class="spark-decoration spark-modal-2"></div>
+            <span class="close-modal">&times;</span>
+            <h2><i class="fas fa-fire"></i> 鍔犲叆鐏姳璇惧爞</h2>
+            
+            <div class="form-message message-success" id="signup-success">
+                <i class="fas fa-check-circle"></i> 娉ㄥ唽鎴愬姛锛佹杩庡姞鍏ョ伀鑺辫鍫傦紒
+            </div>
+            
+            <div class="form-message message-error" id="signup-error">
+                <i class="fas fa-times-circle"></i> 娉ㄥ唽澶辫触锛岃妫€鏌ユ偍鐨勬敞鍐屼俊鎭€?            </div>
+            
+            <form id="signup-form">
+                <div class="form-group">
+                    <label for="signup-nickname">涓€ф樀绉?/label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-user-astronaut input-icon"></i>
+                        <input type="text" id="signup-nickname" placeholder="璇疯缃偍鐨勬樀绉? required autocomplete="nickname">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="signup-email">閭</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-envelope input-icon"></i>
+                        <input type="email" id="signup-email" placeholder="璇疯緭鍏ユ偍鐨勯偖绠? required autocomplete="email">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="signup-phone">鑱旂郴鐢佃瘽</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-phone input-icon"></i>
+                        <input type="tel" id="signup-phone" placeholder="璇疯緭鍏ユ偍鐨勮仈绯荤數璇? required autocomplete="tel">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="signup-password">瀵嗙爜</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input type="password" id="signup-password" placeholder="璇疯缃偍鐨勫瘑鐮? required autocomplete="new-password">
+                        <i class="fas fa-eye-slash toggle-password"></i>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="signup-confirm-password">纭瀵嗙爜</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input type="password" id="signup-confirm-password" placeholder="璇峰啀娆¤緭鍏ュ瘑鐮? required autocomplete="new-password">
+                        <i class="fas fa-eye-slash toggle-password"></i>
+                    </div>
+                </div>
+                <div class="form-checkbox">
+                    <input type="checkbox" id="privacy-policy" required>
+                    <label for="privacy-policy">鎴戝凡闃呰骞跺悓鎰?a href="#">鐢ㄦ埛鍗忚</a>鍜?a href="#">闅愮鏀跨瓥</a></label>
+                </div>
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-rocket"></i> 寮€鍚涔犱箣鏃?                </button>
+                
+                <div class="social-login">
+                    <p>浣跨敤鍏朵粬鏂瑰紡鐧诲綍</p>
+                    <div class="social-login-buttons">
+                        <button type="button" class="btn-social google">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" style="vertical-align: middle; margin-right: 8px;">
+                                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                            </svg>
+                            Google
+                        </button>
+                        <button type="button" class="btn-social wechat">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" style="vertical-align: middle; margin-right: 8px;">
+                                <path fill="#FFFFFF" d="M8.691 2C4.918 2 2 4.919 2 8.691c0 2.087 1.147 3.934 2.87 5.111l-.714 2.148 2.499-.833c.892.248 1.834.382 2.817.382 3.773 0 6.691-2.919 6.691-6.692C16.172 4.919 13.254 2 9.48 2H8.691zm.774 4.15c.595 0 .992.396.992.992 0 .595-.397.992-.992.992-.595 0-1.191-.396-1.191-.992 0-.595.596-.992 1.191-.992zm-4.159 1.983c-.595 0-1.19-.396-1.19-.992 0-.595.595-.992 1.19-.992.595 0 .992.397.992.992 0 .596-.397.992-.992.992z"/>
+                                <path fill="#FFFFFF" d="M22 15.309c0-3.173-3.173-5.749-6.75-5.749-3.773 0-6.75 2.576-6.75 5.75 0 3.173 2.977 5.749 6.75 5.749.784 0 1.568-.099 2.352-.297l2.148.694-.595-1.744C20.73 18.137 22 16.866 22 15.31zm-8.91-1.09c-.399 0-.798-.4-.798-.8 0-.398.4-.798.799-.798.498 0 .797.4.797.799 0 .399-.299.798-.797.798zm4.254 0c-.398 0-.797-.4-.797-.8 0-.398.399-.798.797-.798.398 0 .798.4.798.799 0 .399-.4.798-.798.798z"/>
+                            </svg>
+                            寰俊鐧诲綍
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 寮曞叆Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+    <!-- 寮曞叆AOS JS -->
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <!-- 寮曞叆Lightbox JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js"></script>
+    <!-- 鑷畾涔塉S -->
+    <script src="script.js"></script>
+    <script src="login.js"></script>
+    <script>
+        // 鍒濆鍖朅OS鍔ㄧ敾搴?        document.addEventListener('DOMContentLoaded', function() {
+            AOS.init({
+                duration: 800,
+                easing: 'ease-out',
+                once: true
+            });
+            
+            // 鍒濆鍖朙ightbox
+            lightbox.option({
+                'resizeDuration': 200,
+                'wrapAround': true,
+                'albumLabel': "鐓х墖 %1 / %2",
+                'fadeDuration': 300
+            });
+        });
+    </script>
+</body>
+</html> 
+<!-- 中国自动化学会成员 -->

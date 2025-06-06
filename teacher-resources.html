@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>教师资源 - 火花课堂</title>
+    <!-- 引入Font Awesome图标 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 引入Google字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- 引入AOS动画库 -->
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <!-- 自定义CSS -->
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* 教师资源页面特定样式 */
+        .resource-header {
+            position: relative;
+            padding: 75px 0 40px;
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.1) 0%, rgba(253, 94, 83, 0.05) 100%);
+            margin-bottom: 50px;
+            overflow: hidden;
+        }
+        
+        .resource-header::before, .resource-header::after {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: var(--anime-gradient);
+            opacity: 0.05;
+            z-index: 0;
+        }
+        
+        .resource-header::before {
+            top: -100px;
+            left: -100px;
+        }
+        
+        .resource-header::after {
+            bottom: -100px;
+            right: -100px;
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+        
+        .header-content h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--dark-text);
+        }
+        
+        .header-content p {
+            max-width: 700px;
+            margin: 0 auto;
+            color: var(--gray-text);
+        }
+        
+        .resource-tabs {
+            display: flex;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+        
+        .resource-tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            border-bottom: 3px solid transparent;
+        }
+        
+        .resource-tab.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+            background: rgba(255, 107, 53, 0.05);
+        }
+        
+        .resource-tab:hover:not(.active) {
+            background: rgba(0, 0, 0, 0.02);
+        }
+        
+        .resource-tab i {
+            margin-right: 8px;
+        }
+        
+        .resource-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .resource-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: var(--transition);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .resource-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(255, 107, 53, 0.1);
+        }
+        
+        .resource-image {
+            height: 180px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .resource-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .resource-card:hover .resource-image img {
+            transform: scale(1.05);
+        }
+        
+        .resource-badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            padding: 5px 10px;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            z-index: 1;
+        }
+        
+        .badge-pdf {
+            background: #FF5252;
+            color: white;
+        }
+        
+        .badge-video {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .badge-template {
+            background: #2196F3;
+            color: white;
+        }
+        
+        .badge-interactive {
+            background: #9C27B0;
+            color: white;
+        }
+        
+        .resource-content {
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .resource-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--dark-text);
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+        
+        .resource-desc {
+            color: var(--gray-text);
+            margin-bottom: 15px;
+            flex-grow: 1;
+        }
+        
+        .resource-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            font-size: 0.9rem;
+        }
+        
+        .resource-date {
+            color: var(--gray-text);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .resource-download {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--primary-color);
+            font-weight: 500;
+            transition: var(--transition);
+        }
+        
+        .resource-download:hover {
+            color: var(--anime-accent);
+        }
+        
+        .resource-action {
+            margin-top: 15px;
+            padding: 8px 15px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+        }
+        
+        .resource-action:hover {
+            background: var(--anime-accent);
+        }
+        
+        .featured-resource {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            margin-bottom: 40px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            min-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .featured-resource {
+                flex-direction: row;
+            }
+        }
+        
+        .featured-image {
+            flex: 1;
+            position: relative;
+            min-height: 250px;
+        }
+        
+        @media (min-width: 768px) {
+            .featured-image {
+                flex: 0 0 50%;
+            }
+        }
+        
+        .featured-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .featured-content {
+            flex: 1;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .featured-label {
+            display: inline-block;
+            padding: 5px 15px;
+            background: var(--anime-gradient);
+            color: white;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .featured-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--dark-text);
+            margin-bottom: 15px;
+            line-height: 1.3;
+        }
+        
+        .featured-desc {
+            color: var(--gray-text);
+            margin-bottom: 25px;
+            font-size: 1.05rem;
+            line-height: 1.6;
+        }
+        
+        .featured-stats {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--gray-text);
+        }
+        
+        .stat i {
+            color: var(--primary-color);
+        }
+        
+        .featured-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--primary-color);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: var(--transition);
+            text-decoration: none;
+            align-self: flex-start;
+        }
+        
+        .featured-action:hover {
+            background: var(--anime-accent);
+            transform: translateY(-3px);
+        }
+        
+        .newsletter {
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.1) 0%, rgba(253, 94, 83, 0.2) 100%);
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-align: center;
+            margin: 50px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .newsletter::before, .newsletter::after {
+            content: '';
+            position: absolute;
+            background: var(--anime-gradient);
+            border-radius: 50%;
+            opacity: 0.1;
+        }
+        
+        .newsletter::before {
+            width: 300px;
+            height: 300px;
+            top: -150px;
+            left: -150px;
+        }
+        
+        .newsletter::after {
+            width: 200px;
+            height: 200px;
+            bottom: -100px;
+            right: -100px;
+        }
+        
+        .newsletter-content {
+            position: relative;
+            z-index: 1;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .newsletter h3 {
+            font-size: 1.8rem;
+            color: var(--dark-text);
+            margin-bottom: 15px;
+        }
+        
+        .newsletter p {
+            color: var(--gray-text);
+            margin-bottom: 25px;
+        }
+        
+        .newsletter-form {
+            display: flex;
+            gap: 10px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        @media (max-width: 576px) {
+            .newsletter-form {
+                flex-direction: column;
+            }
+        }
+        
+        .newsletter-input {
+            flex: 1;
+            padding: 12px 20px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            font-size: 1rem;
+            color: var(--dark-text);
+        }
+        
+        .newsletter-button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+        
+        .newsletter-button:hover {
+            background: var(--anime-accent);
+        }
+        
+        /* 模态框样式修复 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        
+        .modal-content {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            overflow: hidden;
+            animation: modalFadeIn 0.5s ease forwards;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding-bottom: 30px;
+        }
+
+        /* 添加模态框动画 */
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* 添加登录/注册模态框背景 */
+        .login-modal-bg, .signup-modal-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 250, 245, 0.95) 100%);
+            opacity: 0.9;
+        }
+
+        /* 添加火花装饰 */
+        .spark-decoration {
+            position: absolute;
+            z-index: -1;
+            border-radius: 50%;
+            background: var(--spark-gradient);
+            opacity: 0.05;
+        }
+
+        .spark-modal-1 {
+            width: 200px;
+            height: 200px;
+            top: -100px;
+            right: -100px;
+        }
+
+        .spark-modal-2 {
+            width: 250px;
+            height: 250px;
+            bottom: -150px;
+            left: -100px;
+        }
+
+        /* 表单消息样式 */
+        .form-message {
+            display: none;
+            padding: 10px 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .message-success {
+            background-color: rgba(76, 175, 80, 0.1);
+            color: #4CAF50;
+            border-left: 4px solid #4CAF50;
+        }
+
+        .message-error {
+            background-color: rgba(244, 67, 54, 0.1);
+            color: #F44336;
+            border-left: 4px solid #F44336;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* 修改导航栏背景色，使用渐变效果与主题更匹配 */
+        .header {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 250, 245, 0.95) 100%);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 2px 15px rgba(255, 107, 53, 0.1);
+            border-bottom: 1px solid rgba(255, 107, 53, 0.05);
+        }
+        
+        /* 为登录按钮设置投影效果 */
+        .btn-login {
+            box-shadow: 0 4px 10px rgba(255, 107, 53, 0.15);
+        }
+        
+        /* 为注册按钮设置更强调的样式 */
+        .btn.anime-btn.btn-signup {
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.25);
+        }
+        
+        /* 添加样式使社交登录按钮更现代化 */
+        .social-login-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+            width: 100%;
+            flex-wrap: wrap;
+        }
+        
+        .btn-social {
+            padding: 8px 15px;
+            border-radius: 4px;
+            border: 1px solid #e0e0e0;
+            background: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            width: 120px;
+            margin-bottom: 10px;
+            z-index: 10;
+            position: relative;
+        }
+        
+        .btn-social:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+        }
+        
+        .btn-social.google {
+            color: #4285F4;
+            border-color: #4285F4;
+        }
+        
+        .btn-social.wechat {
+            color: #ffffff;
+            background-color: #07C160;
+            border-color: #07C160;
+        }
+        
+        /* 确保社交登录部分始终可见 */
+        .social-login {
+            margin-top: 20px;
+            margin-bottom: 20px;
+            width: 100%;
+            position: relative;
+            z-index: 5;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <header class="header">
+        <div class="container header-container">
+            <div class="logo">
+                <h1><a href="index.html"><i class="fas fa-fire"></i> 火花课堂 <span class="sub-logo">Spark Academy</span></a></h1>
+            </div>
+            <nav class="nav">
+                <a href="index.html" class="nav-link">首页</a>
+                <a href="about.html" class="nav-link">学院介绍</a>
+                <a href="founder.html" class="nav-link">创始人</a>
+                <a href="contact.html" class="nav-link">联系我们</a>
+                <a href="help.html" class="nav-link">帮助中心</a>
+                <button class="btn btn-login">登录</button>
+                <button class="btn anime-btn btn-signup">注册</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 页面头部区域 -->
+    <section class="resource-header">
+        <div class="container header-content">
+            <h1 data-aos="fade-up"><i class="fas fa-book-reader"></i> 教师资源中心</h1>
+            <p data-aos="fade-up" data-aos-delay="100">为教育工作者提供高质量的教学资源、课程模板和专业发展材料，助力创新教学和学生成长</p>
+        </div>
+    </section>
+
+    <!-- 主要内容区 -->
+    <section class="resources-section">
+        <div class="container">
+            <!-- 精选资源 -->
+            <div class="featured-resource" data-aos="fade-up">
+                <div class="featured-image">
+                    <img src="https://placehold.co/800x600/FF6B35/FFFFFF?text=教学资源集" alt="教学资源集">
+                </div>
+                <div class="featured-content">
+                    <span class="featured-label">精选资源包</span>
+                    <h2 class="featured-title">2025 AI辅助教学资源全集</h2>
+                    <p class="featured-desc">由火花课堂教育专家团队精心打造的综合性教学资源包，包含AI辅助教学工具指南、课程设计模板、互动教案和评估方法，助力教师打造面向未来的智能化课堂。</p>
+                    <div class="featured-stats">
+                        <div class="stat">
+                            <i class="fas fa-download"></i>
+                            <span>5,621次下载</span>
+                        </div>
+                        <div class="stat">
+                            <i class="fas fa-star"></i>
+                            <span>4.9分 (328评价)</span>
+                        </div>
+                        <div class="stat">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span>2025年1月更新</span>
+                        </div>
+                    </div>
+                    <a href="#" class="featured-action">
+                        免费获取资源包 <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- 资源分类标签 -->
+            <div class="resource-tabs" data-aos="fade-up">
+                <div class="resource-tab active"><i class="fas fa-th-large"></i> 全部资源</div>
+                <div class="resource-tab"><i class="fas fa-file-pdf"></i> 教案与讲义</div>
+                <div class="resource-tab"><i class="fas fa-video"></i> 视频教程</div>
+                <div class="resource-tab"><i class="fas fa-puzzle-piece"></i> 互动教学工具</div>
+                <div class="resource-tab"><i class="fas fa-chart-pie"></i> 评估资料</div>
+            </div>
+            
+            <!-- 资源列表 -->
+            <div class="resource-grid">
+                <!-- 资源卡片1 -->
+                <div class="resource-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="resource-image">
+                        <img src="https://placehold.co/600x400/3F51B5/FFFFFF?text=教学计划模板" alt="教学计划模板">
+                        <span class="resource-badge badge-template">模板</span>
+                    </div>
+                    <div class="resource-content">
+                        <h3 class="resource-title">AI辅助学习目标设定与教学计划模板</h3>
+                        <div class="resource-desc">
+                            <p>帮助教师利用人工智能技术设定个性化学习目标，包含多种课程计划模板和AI工具推荐。</p>
+                        </div>
+                        <button class="resource-action">查看详情 <i class="fas fa-download"></i></button>
+                        <div class="resource-meta">
+                            <div class="resource-date">
+                                <i class="fas fa-calendar-alt"></i> 2025-01-15
+                            </div>
+                            <div class="resource-download">
+                                <i class="fas fa-download"></i> 3,428
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 资源卡片2 -->
+                <div class="resource-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="resource-image">
+                        <img src="https://placehold.co/600x400/FF5722/FFFFFF?text=视频教程" alt="视频教程">
+                        <span class="resource-badge badge-video">视频</span>
+                    </div>
+                    <div class="resource-content">
+                        <h3 class="resource-title">如何利用AI技术进行混合式教学视频系列</h3>
+                        <div class="resource-desc">
+                            <p>10节视频课程，详细讲解如何结合线上线下教学模式，利用AI技术提高学生参与度和学习效果。</p>
+                        </div>
+                        <button class="resource-action">查看课程 <i class="fas fa-play"></i></button>
+                        <div class="resource-meta">
+                            <div class="resource-date">
+                                <i class="fas fa-calendar-alt"></i> 2024-12-10
+                            </div>
+                            <div class="resource-download">
+                                <i class="fas fa-eye"></i> 4,921
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 资源卡片3 -->
+                <div class="resource-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="resource-image">
+                        <img src="https://placehold.co/600x400/4CAF50/FFFFFF?text=互动课件" alt="互动课件">
+                        <span class="resource-badge badge-interactive">互动</span>
+                    </div>
+                    <div class="resource-content">
+                        <h3 class="resource-title">AI生成式问答与多媒体互动课件模板</h3>
+                        <div class="resource-desc">
+                            <p>包含AI生成的互动问答模板、知识竞赛和多媒体展示工具，适用于不同学科的课堂互动。</p>
+                        </div>
+                        <button class="resource-action">获取资源 <i class="fas fa-download"></i></button>
+                        <div class="resource-meta">
+                            <div class="resource-date">
+                                <i class="fas fa-calendar-alt"></i> 2025-02-05
+                            </div>
+                            <div class="resource-download">
+                                <i class="fas fa-download"></i> 2,756
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 资源卡片4 -->
+                <div class="resource-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="resource-image">
+                        <img src="https://placehold.co/600x400/F44336/FFFFFF?text=评估工具" alt="评估工具">
+                        <span class="resource-badge badge-pdf">PDF</span>
+                    </div>
+                    <div class="resource-content">
+                        <h3 class="resource-title">基于AI的学生能力动态评估指南</h3>
+                        <div class="resource-desc">
+                            <p>介绍如何通过AI技术持续评估学生能力发展，包含实用评估表格和数据分析方法。</p>
+                        </div>
+                        <button class="resource-action">下载PDF <i class="fas fa-file-pdf"></i></button>
+                        <div class="resource-meta">
+                            <div class="resource-date">
+                                <i class="fas fa-calendar-alt"></i> 2024-11-20
+                            </div>
+                            <div class="resource-download">
+                                <i class="fas fa-download"></i> 3,102
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 资源卡片5 -->
+                <div class="resource-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="resource-image">
+                        <img src="https://placehold.co/600x400/2196F3/FFFFFF?text=教案集" alt="教案集">
+                        <span class="resource-badge badge-pdf">PDF</span>
+                    </div>
+                    <div class="resource-content">
+                        <h3 class="resource-title">STEM学科AI辅助教案集</h3>
+                        <div class="resource-desc">
+                            <p>集合20个科学、技术、工程和数学领域的AI辅助教案，包含详细的教学流程和资源链接。</p>
+                        </div>
+                        <button class="resource-action">下载教案集 <i class="fas fa-download"></i></button>
+                        <div class="resource-meta">
+                            <div class="resource-date">
+                                <i class="fas fa-calendar-alt"></i> 2025-01-30
+                            </div>
+                            <div class="resource-download">
+                                <i class="fas fa-download"></i> 2,854
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 资源卡片6 -->
+                <div class="resource-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="resource-image">
+                        <img src="https://placehold.co/600x400/9C27B0/FFFFFF?text=讲师培训" alt="讲师培训">
+                        <span class="resource-badge badge-video">视频</span>
+                    </div>
+                    <div class="resource-content">
+                        <h3 class="resource-title">AI时代教师专业发展培训系列</h3>
+                        <div class="resource-desc">
+                            <p>专为教师设计的专业发展培训系列，涵盖AI教学工具应用、数据驱动教学和个性化学习设计等主题。</p>
+                        </div>
+                        <button class="resource-action">开始学习 <i class="fas fa-graduation-cap"></i></button>
+                        <div class="resource-meta">
+                            <div class="resource-date">
+                                <i class="fas fa-calendar-alt"></i> 2024-12-25
+                            </div>
+                            <div class="resource-download">
+                                <i class="fas fa-user-graduate"></i> 1,875
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 订阅通讯 -->
+            <div class="newsletter" data-aos="fade-up">
+                <div class="newsletter-content">
+                    <h3>订阅教师资源更新</h3>
+                    <p>定期获取最新教学资源、教育科技趋势和专业发展机会，助力您的教学创新之旅。</p>
+                    <form class="newsletter-form">
+                        <input type="email" class="newsletter-input" placeholder="请输入您的电子邮箱">
+                        <button type="submit" class="newsletter-button">订阅更新</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3><i class="fas fa-fire"></i> 火花课堂 <span class="sub-logo">Spark Academy</span></h3>
+                    <p>火花课堂旨在为学生提供高质量的教育资源和学习体验。</p>
+                    <div class="social-icons">
+                        <a href="https://v.douyin.com/fbsQP2e5xIo/" class="social-icon" target="_blank" rel="noopener"><i class="fab fa-tiktok"></i></a>
+                        <a href="https://youtube.com/@ray-ik8tr?si=uC9HqfGqC2LCD5pH" class="social-icon" target="_blank" rel="noopener"><i class="fab fa-youtube"></i></a>
+                        <a href="https://www.facebook.com/share/16PpZYKL4q/?mibextid=qi2Omg" class="social-icon" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://b23.tv/7oI59PW" class="social-icon" target="_blank" rel="noopener"><i class="fab fa-bilibili"></i></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>关于我们</h4>
+                    <ul>
+                        <li><a href="about.html">学院介绍</a></li>
+                        <li><a href="founder.html">创始人介绍</a></li>
+                        <li><a href="contact.html">联系我们</a></li>
+                        <li><a href="help.html">帮助中心</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>学习资源</h4>
+                    <ul>
+                        <li><a href="courses.html">课程目录</a></li>
+                        <li><a href="ai-teachers.html">AI教师团队</a></li>
+                        <li><a href="teacher-resources.html">教师资源</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 火花课堂 (Spark Academy). 版权所有，未经许可不得转载。</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 登录模态框 -->
+    <div class="modal" id="login-modal">
+        <div class="modal-content">
+            <div class="login-modal-bg"></div>
+            <div class="spark-decoration spark-modal-1"></div>
+            <div class="spark-decoration spark-modal-2"></div>
+            <span class="close-modal">&times;</span>
+            <h2><i class="fas fa-fire"></i> 登录火花课堂</h2>
+            
+            <div class="form-message message-success" id="login-success">
+                <i class="fas fa-check-circle"></i> 登录成功，欢迎回来！
+            </div>
+            
+            <div class="form-message message-error" id="login-error">
+                <i class="fas fa-times-circle"></i> 登录失败，请检查您的邮箱和密码。
+            </div>
+            
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="login-email">邮箱</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-envelope input-icon"></i>
+                        <input type="email" id="login-email" placeholder="请输入您的邮箱" required autocomplete="email">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">密码</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input type="password" id="login-password" placeholder="请输入您的密码" required autocomplete="current-password">
+                        <i class="fas fa-eye-slash toggle-password"></i>
+                    </div>
+                </div>
+                <div class="form-options">
+                    <div class="remember-me">
+                        <input type="checkbox" id="remember-me">
+                        <label for="remember-me">记住我</label>
+                    </div>
+                    <a href="#" class="forgot-password">忘记密码？</a>
+                </div>
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-sign-in-alt"></i> 登录
+                </button>
+                <div class="social-login">
+                    <p>使用其他方式登录</p>
+                    <div class="social-login-buttons">
+                        <button type="button" class="btn-social google">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" style="vertical-align: middle; margin-right: 8px;">
+                                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                            </svg>
+                            Google
+                        </button>
+                        <button type="button" class="btn-social wechat">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" style="vertical-align: middle; margin-right: 8px;">
+                                <path fill="#FFFFFF" d="M8.691 2C4.918 2 2 4.919 2 8.691c0 2.087 1.147 3.934 2.87 5.111l-.714 2.148 2.499-.833c.892.248 1.834.382 2.817.382 3.773 0 6.691-2.919 6.691-6.692C16.172 4.919 13.254 2 9.48 2H8.691zm.774 4.15c.595 0 .992.396.992.992 0 .595-.397.992-.992.992-.595 0-1.191-.396-1.191-.992 0-.595.596-.992 1.191-.992zm-4.159 1.983c-.595 0-1.19-.396-1.19-.992 0-.595.595-.992 1.19-.992.595 0 .992.397.992.992 0 .596-.397.992-.992.992z"/>
+                                <path fill="#FFFFFF" d="M22 15.309c0-3.173-3.173-5.749-6.75-5.749-3.773 0-6.75 2.576-6.75 5.75 0 3.173 2.977 5.749 6.75 5.749.784 0 1.568-.099 2.352-.297l2.148.694-.595-1.744C20.73 18.137 22 16.866 22 15.31zm-8.91-1.09c-.399 0-.798-.4-.798-.8 0-.398.4-.798.799-.798.498 0 .797.4.797.799 0 .399-.299.798-.797.798zm4.254 0c-.398 0-.797-.4-.797-.8 0-.398.399-.798.797-.798.398 0 .798.4.798.799 0 .399-.4.798-.798.798z"/>
+                            </svg>
+                            微信登录
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 注册模态框 -->
+    <div class="modal" id="signup-modal">
+        <div class="modal-content">
+            <div class="signup-modal-bg"></div>
+            <div class="spark-decoration spark-modal-1"></div>
+            <div class="spark-decoration spark-modal-2"></div>
+            <span class="close-modal">&times;</span>
+            <h2><i class="fas fa-fire"></i> 加入火花课堂</h2>
+            
+            <div class="form-message message-success" id="signup-success">
+                <i class="fas fa-check-circle"></i> 注册成功！欢迎加入火花课堂！
+            </div>
+            
+            <div class="form-message message-error" id="signup-error">
+                <i class="fas fa-times-circle"></i> 注册失败，请检查您的注册信息。
+            </div>
+            
+            <form id="signup-form">
+                <div class="form-group">
+                    <label for="signup-nickname">个性昵称</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-user-astronaut input-icon"></i>
+                        <input type="text" id="signup-nickname" placeholder="请设置您的昵称" required autocomplete="nickname">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="signup-email">邮箱</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-envelope input-icon"></i>
+                        <input type="email" id="signup-email" placeholder="请输入您的邮箱" required autocomplete="email">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="signup-phone">联系电话</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-phone input-icon"></i>
+                        <input type="tel" id="signup-phone" placeholder="请输入您的联系电话" required autocomplete="tel">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="signup-password">密码</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input type="password" id="signup-password" placeholder="请设置您的密码" required autocomplete="new-password">
+                        <i class="fas fa-eye-slash toggle-password"></i>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="signup-confirm-password">确认密码</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input type="password" id="signup-confirm-password" placeholder="请再次输入密码" required autocomplete="new-password">
+                        <i class="fas fa-eye-slash toggle-password"></i>
+                    </div>
+                </div>
+                <div class="form-checkbox">
+                    <input type="checkbox" id="privacy-policy" required>
+                    <label for="privacy-policy">我已阅读并同意<a href="#">用户协议</a>和<a href="#">隐私政策</a></label>
+                </div>
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-rocket"></i> 开启学习之旅
+                </button>
+                
+                <div class="social-login">
+                    <p>使用其他方式登录</p>
+                    <div class="social-login-buttons">
+                        <button type="button" class="btn-social google">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" style="vertical-align: middle; margin-right: 8px;">
+                                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                            </svg>
+                            Google
+                        </button>
+                        <button type="button" class="btn-social wechat">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" style="vertical-align: middle; margin-right: 8px;">
+                                <path fill="#FFFFFF" d="M8.691 2C4.918 2 2 4.919 2 8.691c0 2.087 1.147 3.934 2.87 5.111l-.714 2.148 2.499-.833c.892.248 1.834.382 2.817.382 3.773 0 6.691-2.919 6.691-6.692C16.172 4.919 13.254 2 9.48 2H8.691zm.774 4.15c.595 0 .992.396.992.992 0 .595-.397.992-.992.992-.595 0-1.191-.396-1.191-.992 0-.595.596-.992 1.191-.992zm-4.159 1.983c-.595 0-1.19-.396-1.19-.992 0-.595.595-.992 1.19-.992.595 0 .992.397.992.992 0 .596-.397.992-.992.992z"/>
+                                <path fill="#FFFFFF" d="M22 15.309c0-3.173-3.173-5.749-6.75-5.749-3.773 0-6.75 2.576-6.75 5.75 0 3.173 2.977 5.749 6.75 5.749.784 0 1.568-.099 2.352-.297l2.148.694-.595-1.744C20.73 18.137 22 16.866 22 15.31zm-8.91-1.09c-.399 0-.798-.4-.798-.8 0-.398.4-.798.799-.798.498 0 .797.4.797.799 0 .399-.299.798-.797.798zm4.254 0c-.398 0-.797-.4-.797-.8 0-.398.399-.798.797-.798.398 0 .798.4.798.799 0 .399-.4.798-.798.798z"/>
+                            </svg>
+                            微信登录
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 引入AOS JS -->
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <!-- 自定义JS -->
+    <script src="script.js"></script>
+    <script src="login.js"></script>
+    <script>
+        // 初始化AOS动画库
+        document.addEventListener('DOMContentLoaded', function() {
+            AOS.init({
+                duration: 800,
+                easing: 'ease-out',
+                once: true
+            });
+            
+            // 资源分类标签切换效果
+            const resourceTabs = document.querySelectorAll('.resource-tab');
+            resourceTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    resourceTabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html> 

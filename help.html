@@ -1,0 +1,1240 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>帮助中心 - 火花课堂</title>
+    <!-- 引入Font Awesome图标 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 引入Google字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- 引入AOS动画库 -->
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <!-- 引入自定义样式文件 -->
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* 帮助中心页面头部样式 */
+        .page-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+            color: #fff;
+            padding: 100px 0 50px;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+        
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><polygon fill="rgba(255,255,255,0.05)" points="0,100 100,0 100,100"/></svg>');
+            background-size: cover;
+            z-index: 0;
+        }
+        
+        .page-header .container {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .page-title {
+            font-size: 42px;
+            margin-bottom: 20px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .page-subtitle {
+            font-size: 18px;
+            max-width: 800px;
+            margin: 0 auto 30px;
+            opacity: 0.9;
+        }
+        
+        .help-container {
+            padding: 70px 0;
+        }
+        
+        .help-nav {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 50px;
+            border-bottom: 1px solid #eee;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+        
+        .help-nav-link {
+            padding: 12px 25px;
+            margin: 0 5px;
+            color: #555;
+            text-decoration: none;
+            font-weight: 500;
+            position: relative;
+            transition: color 0.3s ease;
+            white-space: nowrap;
+        }
+        
+        .help-nav-link:hover {
+            color: var(--primary-color);
+        }
+        
+        .help-nav-link.active {
+            color: var(--primary-color);
+        }
+        
+        .help-nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -11px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--accent-color);
+        }
+        
+        .help-search {
+            max-width: 600px;
+            margin: 0 auto 50px;
+        }
+        
+        .search-form {
+            display: flex;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 15px 20px;
+            border: none;
+            font-size: 16px;
+            outline: none;
+        }
+        
+        .search-button {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0 30px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .search-button:hover {
+            background: var(--primary-color);
+        }
+        
+        .help-section {
+            display: none;
+        }
+        
+        .help-section.active {
+            display: block;
+        }
+        
+        .faq-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .faq-item {
+            background: #fff;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+        
+        .faq-question {
+            padding: 20px;
+            font-weight: 500;
+            color: #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .faq-question:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .faq-question i {
+            transition: transform 0.3s ease;
+        }
+        
+        .faq-item.active .faq-question {
+            color: var(--primary-color);
+        }
+        
+        .faq-item.active .faq-question i {
+            transform: rotate(180deg);
+        }
+        
+        .faq-answer {
+            display: none;
+            padding: 0 20px 20px;
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .faq-item.active .faq-answer {
+            display: block;
+        }
+        
+        .guide-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .guide-card {
+            background: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .guide-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .guide-icon {
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary-color-light) 0%, var(--accent-color-light) 100%);
+            font-size: 48px;
+            color: white;
+        }
+        
+        .guide-content {
+            padding: 20px;
+        }
+        
+        .guide-title {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+        
+        .guide-desc {
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        
+        .guide-link {
+            display: inline-flex;
+            align-items: center;
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .guide-link i {
+            margin-left: 5px;
+            transition: transform 0.3s ease;
+        }
+        
+        .guide-link:hover {
+            color: var(--primary-color);
+        }
+        
+        .guide-link:hover i {
+            transform: translateX(3px);
+        }
+        
+        .contact-support {
+            background: #f9f9f9;
+            padding: 70px 0;
+            text-align: center;
+        }
+        
+        .support-title {
+            font-size: 28px;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+        
+        .support-subtitle {
+            max-width: 700px;
+            margin: 0 auto 30px;
+            color: #666;
+        }
+        
+        .support-options {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .support-option {
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 300px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .support-option:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .support-icon {
+            font-size: 36px;
+            color: var(--accent-color);
+            margin-bottom: 20px;
+        }
+        
+        .support-option h3 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+        
+        .support-option p {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        .btn-support {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .btn-support:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        @media (max-width: 768px) {
+            .help-nav {
+                justify-content: flex-start;
+                padding-bottom: 15px;
+            }
+            
+            .support-options {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        /* 模态框样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        
+        .modal-content {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            overflow: hidden;
+            animation: modalFadeIn 0.5s ease forwards;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding-bottom: 30px;
+        }
+
+        /* 添加模态框动画 */
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* 添加登录/注册模态框背景 */
+        .login-modal-bg, .signup-modal-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 250, 245, 0.95) 100%);
+            opacity: 0.9;
+        }
+
+        /* 添加火花装饰 */
+        .spark-decoration {
+            position: absolute;
+            z-index: -1;
+            border-radius: 50%;
+            background: var(--spark-gradient);
+            opacity: 0.05;
+        }
+
+        .spark-modal-1 {
+            width: 200px;
+            height: 200px;
+            top: -100px;
+            right: -100px;
+        }
+
+        .spark-modal-2 {
+            width: 250px;
+            height: 250px;
+            bottom: -150px;
+            left: -100px;
+        }
+
+        /* 表单消息样式 */
+        .form-message {
+            display: none;
+            padding: 10px 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .message-success {
+            background-color: rgba(76, 175, 80, 0.1);
+            color: #4CAF50;
+            border-left: 4px solid #4CAF50;
+        }
+
+        .message-error {
+            background-color: rgba(244, 67, 54, 0.1);
+            color: #F44336;
+            border-left: 4px solid #F44336;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 调整按钮大小，稍微增大 */
+        .nav .btn {
+            padding: 0.7rem 1.5rem;
+            font-size: 0.9rem;
+        }
+        
+        /* 修改导航栏背景色，使用渐变效果与主题更匹配 */
+        .header {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 250, 245, 0.95) 100%);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 2px 15px rgba(255, 107, 53, 0.1);
+            border-bottom: 1px solid rgba(255, 107, 53, 0.05);
+        }
+        
+        /* 为登录按钮设置投影效果 */
+        .btn-login {
+            box-shadow: 0 4px 10px rgba(255, 107, 53, 0.15);
+        }
+        
+        /* 为注册按钮设置更强调的样式 */
+        .btn.anime-btn.btn-signup {
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.25);
+        }
+        
+        /* 添加样式使社交登录按钮更现代化 */
+        .social-login-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+            width: 100%;
+            flex-wrap: wrap;
+        }
+        
+        .btn-social {
+            padding: 8px 15px;
+            border-radius: 4px;
+            border: 1px solid #e0e0e0;
+            background: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            width: 120px;
+            margin-bottom: 10px;
+            z-index: 10;
+            position: relative;
+        }
+        
+        .btn-social:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+        }
+        
+        .btn-social.google {
+            color: #4285F4;
+            border-color: #4285F4;
+        }
+        
+        .btn-social.wechat {
+            color: #ffffff;
+            background-color: #07C160;
+            border-color: #07C160;
+        }
+        
+        /* 确保社交登录部分始终可见 */
+        .social-login {
+            margin-top: 20px;
+            margin-bottom: 20px;
+            width: 100%;
+            position: relative;
+            z-index: 5;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <header class="header">
+        <div class="container header-container">
+            <div class="logo">
+                <h1><i class="fas fa-fire"></i> 火花课堂 <span class="sub-logo">Spark Academy</span></h1>
+            </div>
+            <nav class="nav">
+                <a href="index.html" class="nav-link">首页</a>
+                <a href="about.html" class="nav-link">学院介绍</a>
+                <a href="founder.html" class="nav-link">创始人</a>
+                <a href="contact.html" class="nav-link">联系我们</a>
+                <a href="help.html" class="nav-link active">帮助中心</a>
+                <button class="btn btn-login">登录</button>
+                <button class="btn anime-btn btn-signup">注册</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 帮助中心页面头部 -->
+    <section class="page-header">
+        <div class="container">
+            <h1 class="page-title" data-aos="fade-up">帮助中心</h1>
+            <p class="page-subtitle" data-aos="fade-up" data-aos-delay="100" style="color: #FF6B35; font-weight: 500;">帮助中心页面，提供各种问题的解答和指导。</p>
+        </div>
+        <!-- 添加动画元素 -->
+        <div class="anime-star anime-star-1"></div>
+        <div class="anime-star anime-star-2"></div>
+        <div class="anime-star anime-star-3"></div>
+        <div class="tech-circle tech-circle-1"></div>
+        <div class="tech-circle tech-circle-2"></div>
+    </section>
+
+    <!-- 帮助中心内容部分 -->
+    <section class="help-container">
+        <div class="container">
+            <!-- 搜索框 -->
+            <div class="help-search" data-aos="fade-up">
+                <form class="search-form">
+                    <input type="text" class="search-input" placeholder="搜索帮助中心...">
+                    <button type="submit" class="search-button" title="搜索">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </form>
+            </div>
+            
+            <!-- 帮助导航 -->
+            <div class="help-nav" data-aos="fade-up">
+                <a href="#faq" class="help-nav-link active" data-target="faq">常见问题</a>
+                <a href="#guide" class="help-nav-link" data-target="guide">课程学习</a>
+                <a href="#account" class="help-nav-link" data-target="account">账户管理</a>
+                <a href="#payment" class="help-nav-link" data-target="payment">支付问题</a>
+                <a href="#course" class="help-nav-link" data-target="course">课程问题</a>
+                <a href="#tech" class="help-nav-link" data-target="tech">技术问题</a>
+            </div>
+            
+            <!-- 常见问题 -->
+            <div id="faq" class="help-section active">
+                <div class="faq-container">
+                    <div class="faq-item" data-aos="fade-up">
+                        <div class="faq-question">
+                            <span>什么是火花课堂？</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>火花课堂是一个在线学习平台，提供各种课程和学习资源。</p>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item" data-aos="fade-up" data-aos-delay="100">
+                        <div class="faq-question">
+                            <span>如何注册账号？</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>注册账号的步骤如下：</p>
+                            <ol>
+                                <li>打开网站并点击"注册"按钮</li>
+                                <li>填写必要的个人信息</li>
+                                <li>完成验证流程</li>
+                                <li>登录账号</li>
+                            </ol>
+                            <p>注册完成后，您可以享受完整的平台功能。</p>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item" data-aos="fade-up" data-aos-delay="200">
+                        <div class="faq-question">
+                            <span>课程学习有哪些好处？</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>课程学习的好处包括：</p>
+                            <ul>
+                                <li><strong>6-9个月</strong>的学习可以获得基础知识</li>
+                                <li><strong>10-12个月</strong>的学习可以获得进阶知识</li>
+                                <li><strong>13-15个月</strong>的学习可以获得高级知识</li>
+                                <li><strong>16-18个月</strong>的学习可以获得专业知识</li>
+                            </ul>
+                            <p>学习课程后，您将获得完整的知识体系和实践能力。</p>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item" data-aos="fade-up" data-aos-delay="300">
+                        <div class="faq-question">
+                            <span>如何学习AI课程？</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>学习AI课程的步骤如下：</p>
+                            <ul>
+                                <li>观看课程视频，了解基础知识</li>
+                                <li>完成课后练习，巩固所学内容</li>
+                                <li>参与讨论，与其他学员交流</li>
+                                <li>完成项目实践，应用所学知识</li>
+                                <li>参加考试，评估学习效果</li>
+                            </ul>
+                            <p>学习AI课程需要持续的努力和实践，但您将获得宝贵的知识和技能。</p>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item" data-aos="fade-up" data-aos-delay="400">
+                        <div class="faq-question">
+                            <span>如何解决课程学习中的问题？</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>如果您在课程学习中遇到问题，可以采取以下步骤：</p>
+                            <ol>
+                                <li>查看课程资料和视频，尝试自行解决问题</li>
+                                <li>参与课程讨论，与其他学员交流</li>
+                                <li>联系课程导师，寻求帮助</li>
+                                <li>参加线下活动，与老师和同学面对面交流</li>
+                                <li>利用平台提供的资源，如论坛和社区</li>
+                            </ol>
+                            <p>如果您的问题无法解决，请及时联系平台客服，我们将尽力为您提供帮助。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 课程学习 -->
+            <div id="guide" class="help-section">
+                <div class="guide-container">
+                    <div class="guide-card" data-aos="fade-up">
+                        <div class="guide-icon">
+                            <i class="fas fa-rocket"></i>
+                        </div>
+                        <div class="guide-content">
+                            <h3 class="guide-title">火箭课程学习</h3>
+                            <p class="guide-desc">详细介绍火箭课程的学习内容和方法。</p>
+                            <a href="#" class="guide-link">查看课程 <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                    
+                    <div class="guide-card" data-aos="fade-up" data-aos-delay="100">
+                        <div class="guide-icon">
+                            <i class="fas fa-chalkboard-teacher"></i>
+                        </div>
+                        <div class="guide-content">
+                            <h3 class="guide-title">AI课程学习</h3>
+                            <p class="guide-desc">详细介绍AI课程的学习内容和方法。</p>
+                            <a href="#" class="guide-link">查看课程 <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                    
+                    <div class="guide-card" data-aos="fade-up" data-aos-delay="200">
+                        <div class="guide-icon">
+                            <i class="fas fa-vr-cardboard"></i>
+                        </div>
+                        <div class="guide-content">
+                            <h3 class="guide-title">VR/AR课程学习</h3>
+                            <p class="guide-desc">详细介绍VR/AR课程的学习内容和方法。</p>
+                            <a href="#" class="guide-link">查看课程 <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                    
+                    <div class="guide-card" data-aos="fade-up" data-aos-delay="300">
+                        <div class="guide-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="guide-content">
+                            <h3 class="guide-title">AI课程学习</h3>
+                            <p class="guide-desc">详细介绍AI课程的学习内容和方法。</p>
+                            <a href="#" class="guide-link">查看课程 <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                    
+                    <div class="guide-card" data-aos="fade-up" data-aos-delay="400">
+                        <div class="guide-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="guide-content">
+                            <h3 class="guide-title">AI课程学习</h3>
+                            <p class="guide-desc">详细介绍AI课程的学习内容和方法。</p>
+                            <a href="#" class="guide-link">查看课程 <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                    
+                    <div class="guide-card" data-aos="fade-up" data-aos-delay="500">
+                        <div class="guide-icon">
+                            <i class="fas fa-gamepad"></i>
+                        </div>
+                        <div class="guide-content">
+                            <h3 class="guide-title">AI课程学习</h3>
+                            <p class="guide-desc">详细介绍AI课程的学习内容和方法。</p>
+                            <a href="#" class="guide-link">查看课程 <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 联系支持 -->
+            <div id="account" class="help-section">
+                <div class="guide-container">
+                    <div class="guide-card" data-aos="fade-up">
+                        <div class="guide-icon">
+                            <i class="fas fa-headset"></i>
+                        </div>
+                        <div class="guide-content">
+                            <h3 class="guide-title">在线客服</h3>
+                            <p class="guide-desc">周一至周日，每天00:00-21:00</p>
+                            <a href="#" class="btn-support">
+                                <i class="fas fa-comment-dots"></i> 联系客服
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="guide-card" data-aos="fade-up" data-aos-delay="100">
+                        <div class="guide-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="guide-content">
+                            <h3 class="guide-title">电子邮件</h3>
+                            <p>发送邮件至support@sparkacademy.cn，我们将在24小时内回复</p>
+                            <a href="mailto:support@sparkacademy.cn" class="btn-support">
+                                <i class="fas fa-paper-plane"></i> 发送邮件
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="guide-card" data-aos="fade-up" data-aos-delay="200">
+                        <div class="guide-icon">
+                            <i class="fas fa-phone-alt"></i>
+                        </div>
+                        <div class="guide-content">
+                            <h3 class="guide-title">电话咨询</h3>
+                            <p>周一至周日，每天00:00-21:00</p>
+                            <a href="tel:4008007007" class="btn-support">
+                                <i class="fas fa-phone"></i> 400-800-7007
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 联系支持 -->
+    <section class="contact-support">
+        <div class="container">
+            <h2 class="support-title" data-aos="fade-up">联系支持</h2>
+            <p class="support-subtitle" data-aos="fade-up" data-aos-delay="100">
+                如果您有任何问题或需要帮助，请随时联系我们。
+            </p>
+            
+            <div class="support-options">
+                <div class="support-option" data-aos="fade-up" data-aos-delay="200">
+                    <div class="support-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <h3>在线客服</h3>
+                    <p>周一至周日，每天00:00-21:00</p>
+                    <a href="#" class="btn-support">
+                        <i class="fas fa-comment-dots"></i> 联系客服
+                    </a>
+                </div>
+                
+                <div class="support-option" data-aos="fade-up" data-aos-delay="300">
+                    <div class="support-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <h3>电子邮件</h3>
+                    <p>发送邮件至support@sparkacademy.cn，我们将在24小时内回复</p>
+                    <a href="mailto:support@sparkacademy.cn" class="btn-support">
+                        <i class="fas fa-paper-plane"></i> 发送邮件
+                    </a>
+                </div>
+                
+                <div class="support-option" data-aos="fade-up" data-aos-delay="400">
+                    <div class="support-icon">
+                        <i class="fas fa-phone-alt"></i>
+                    </div>
+                    <h3>电话咨询</h3>
+                    <p>周一至周日，每天00:00-21:00</p>
+                    <a href="tel:4008007007" class="btn-support">
+                        <i class="fas fa-phone"></i> 400-800-7007
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3><i class="fas fa-fire"></i> 火花课堂 <span class="sub-logo">Spark Academy</span></h3>
+                    <p>火花课堂旨在为学生提供高质量的教育资源和学习体验。</p>
+                    <div class="social-icons">
+                        <a href="https://v.douyin.com/fbsQP2e5xIo/" class="social-icon" target="_blank" rel="noopener"><i class="fab fa-tiktok"></i></a>
+                        <a href="https://youtube.com/@ray-ik8tr?si=uC9HqfGqC2LCD5pH" class="social-icon" target="_blank" rel="noopener"><i class="fab fa-youtube"></i></a>
+                        <a href="https://www.facebook.com/share/16PpZYKL4q/?mibextid=qi2Omg" class="social-icon" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://b23.tv/7oI59PW" class="social-icon" target="_blank" rel="noopener"><i class="fab fa-bilibili"></i></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>关于我们</h4>
+                    <ul>
+                        <li><a href="about.html">学院介绍</a></li>
+                        <li><a href="founder.html">创始人介绍</a></li>
+                        <li><a href="contact.html">联系我们</a></li>
+                        <li><a href="help.html">帮助中心</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>学习资源</h4>
+                    <ul>
+                        <li><a href="courses.html">课程目录</a></li>
+                        <li><a href="ai-teachers.html">AI教师团队</a></li>
+                        <li><a href="teacher-resources.html">教师资源</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 火花课堂 (Spark Academy). 版权所有，未经许可不得转载。</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 登录模态框 -->
+    <div class="modal" id="login-modal">
+        <div class="modal-content">
+            <div class="login-modal-bg"></div>
+            <div class="spark-decoration spark-modal-1"></div>
+            <div class="spark-decoration spark-modal-2"></div>
+            <span class="close-modal">&times;</span>
+            <h2><i class="fas fa-fire"></i> 登录火花课堂</h2>
+            
+            <div class="form-message message-success" id="login-success">
+                <i class="fas fa-check-circle"></i> 登录成功，欢迎回来！
+            </div>
+            
+            <div class="form-message message-error" id="login-error">
+                <i class="fas fa-times-circle"></i> 登录失败，请检查您的邮箱和密码。
+            </div>
+            
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="login-email">邮箱</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-envelope input-icon"></i>
+                        <input type="email" id="login-email" placeholder="请输入您的邮箱" required autocomplete="email">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">密码</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input type="password" id="login-password" placeholder="请输入您的密码" required autocomplete="current-password">
+                        <i class="fas fa-eye-slash toggle-password"></i>
+                    </div>
+                </div>
+                <div class="form-options">
+                    <div class="remember-me">
+                        <input type="checkbox" id="remember-me">
+                        <label for="remember-me">记住我</label>
+                    </div>
+                    <a href="#" class="forgot-password">忘记密码？</a>
+                </div>
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-sign-in-alt"></i> 登录
+                </button>
+                <div class="social-login">
+                    <p>使用其他方式登录</p>
+                    <div class="social-login-buttons">
+                        <button type="button" class="btn-social google">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" style="vertical-align: middle; margin-right: 8px;">
+                                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                            </svg>
+                            Google
+                        </button>
+                        <button type="button" class="btn-social wechat">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" style="vertical-align: middle; margin-right: 8px;">
+                                <path fill="#FFFFFF" d="M8.691 2C4.918 2 2 4.919 2 8.691c0 2.087 1.147 3.934 2.87 5.111l-.714 2.148 2.499-.833c.892.248 1.834.382 2.817.382 3.773 0 6.691-2.919 6.691-6.692C16.172 4.919 13.254 2 9.48 2H8.691zm.774 4.15c.595 0 .992.396.992.992 0 .595-.397.992-.992.992-.595 0-1.191-.396-1.191-.992 0-.595.596-.992 1.191-.992zm-4.159 1.983c-.595 0-1.19-.396-1.19-.992 0-.595.595-.992 1.19-.992.595 0 .992.397.992.992 0 .596-.397.992-.992.992z"/>
+                                <path fill="#FFFFFF" d="M22 15.309c0-3.173-3.173-5.749-6.75-5.749-3.773 0-6.75 2.576-6.75 5.75 0 3.173 2.977 5.749 6.75 5.749.784 0 1.568-.099 2.352-.297l2.148.694-.595-1.744C20.73 18.137 22 16.866 22 15.31zm-8.91-1.09c-.399 0-.798-.4-.798-.8 0-.398.4-.798.799-.798.498 0 .797.4.797.799 0 .399-.299.798-.797.798zm4.254 0c-.398 0-.797-.4-.797-.8 0-.398.399-.798.797-.798.398 0 .798.4.798.799 0 .399-.4.798-.798.798z"/>
+                            </svg>
+                            微信登录
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 注册模态框 -->
+    <div class="modal" id="signup-modal">
+        <div class="modal-content">
+            <div class="signup-modal-bg"></div>
+            <div class="spark-decoration spark-modal-1"></div>
+            <div class="spark-decoration spark-modal-2"></div>
+            <span class="close-modal">&times;</span>
+            <h2><i class="fas fa-fire"></i> 加入火花课堂</h2>
+            
+            <div class="form-message message-success" id="signup-success">
+                <i class="fas fa-check-circle"></i> 注册成功！欢迎加入火花课堂！
+            </div>
+            
+            <div class="form-message message-error" id="signup-error">
+                <i class="fas fa-times-circle"></i> 注册失败，请检查您的注册信息。
+            </div>
+            
+            <form id="signup-form">
+                <div class="form-group">
+                    <label for="signup-nickname">个性昵称</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-user-astronaut input-icon"></i>
+                        <input type="text" id="signup-nickname" placeholder="请设置您的昵称" required autocomplete="nickname">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="signup-email">邮箱</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-envelope input-icon"></i>
+                        <input type="email" id="signup-email" placeholder="请输入您的邮箱" required autocomplete="email">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="signup-phone">联系电话</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-phone input-icon"></i>
+                        <input type="tel" id="signup-phone" placeholder="请输入您的联系电话" required autocomplete="tel">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="signup-password">密码</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input type="password" id="signup-password" placeholder="请设置您的密码" required autocomplete="new-password">
+                        <i class="fas fa-eye-slash toggle-password"></i>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="signup-confirm-password">确认密码</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input type="password" id="signup-confirm-password" placeholder="请再次输入密码" required autocomplete="new-password">
+                        <i class="fas fa-eye-slash toggle-password"></i>
+                    </div>
+                </div>
+                <div class="form-checkbox">
+                    <input type="checkbox" id="privacy-policy" required>
+                    <label for="privacy-policy">我已阅读并同意<a href="#">用户协议</a>和<a href="#">隐私政策</a></label>
+                </div>
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-rocket"></i> 开启学习之旅
+                </button>
+                
+                <div class="social-login">
+                    <p>使用其他方式登录</p>
+                    <div class="social-login-buttons">
+                        <button type="button" class="btn-social google">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" style="vertical-align: middle; margin-right: 8px;">
+                                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                            </svg>
+                            Google
+                        </button>
+                        <button type="button" class="btn-social wechat">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" style="vertical-align: middle; margin-right: 8px;">
+                                <path fill="#FFFFFF" d="M8.691 2C4.918 2 2 4.919 2 8.691c0 2.087 1.147 3.934 2.87 5.111l-.714 2.148 2.499-.833c.892.248 1.834.382 2.817.382 3.773 0 6.691-2.919 6.691-6.692C16.172 4.919 13.254 2 9.48 2H8.691zm.774 4.15c.595 0 .992.396.992.992 0 .595-.397.992-.992.992-.595 0-1.191-.396-1.191-.992 0-.595.596-.992 1.191-.992zm-4.159 1.983c-.595 0-1.19-.396-1.19-.992 0-.595.595-.992 1.19-.992.595 0 .992.397.992.992 0 .596-.397.992-.992.992z"/>
+                                <path fill="#FFFFFF" d="M22 15.309c0-3.173-3.173-5.749-6.75-5.749-3.773 0-6.75 2.576-6.75 5.75 0 3.173 2.977 5.749 6.75 5.749.784 0 1.568-.099 2.352-.297l2.148.694-.595-1.744C20.73 18.137 22 16.866 22 15.31zm-8.91-1.09c-.399 0-.798-.4-.798-.8 0-.398.4-.798.799-.798.498 0 .797.4.797.799 0 .399-.299.798-.797.798zm4.254 0c-.398 0-.797-.4-.797-.8 0-.398.399-.798.797-.798.398 0 .798.4.798.799 0 .399-.4.798-.798.798z"/>
+                            </svg>
+                            微信登录
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 引入AOS JS -->
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
+    <script src="script.js"></script>
+    <script src="login.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化AOS动画
+            AOS.init({
+                duration: 800,
+                easing: 'ease-out',
+                once: true
+            });
+            
+            // 帮助导航点击事件
+            const navLinks = document.querySelectorAll('.help-nav-link');
+            const helpSections = document.querySelectorAll('.help-section');
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // 移除所有导航链接的active类
+                    navLinks.forEach(item => item.classList.remove('active'));
+                    helpSections.forEach(section => section.classList.remove('active'));
+                    
+                    // 添加active类到当前链接
+                    this.classList.add('active');
+                    
+                    // 获取目标部分ID并添加active类
+                    const targetId = this.getAttribute('data-target');
+                    document.getElementById(targetId).classList.add('active');
+                });
+            });
+            
+            // FAQ搜索功能
+            const faqItems = document.querySelectorAll('.faq-item');
+            
+            faqItems.forEach(item => {
+                const question = item.querySelector('.faq-question');
+                
+                question.addEventListener('click', function() {
+                    // 移除所有FAQ项的active类
+                    faqItems.forEach(otherItem => otherItem.classList.remove('active'));
+                    
+                    // 添加active类到当前项
+                    item.classList.toggle('active');
+                });
+            });
+            
+            // 搜索功能
+            const searchForm = document.querySelector('.search-form');
+            
+            searchForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const searchTerm = this.querySelector('.search-input').value.toLowerCase();
+                
+                if (searchTerm.trim() === '') return;
+                
+                // 搜索FAQ项
+                const faqQuestions = document.querySelectorAll('.faq-question span');
+                let found = false;
+                
+                faqQuestions.forEach(question => {
+                    const questionText = question.textContent.toLowerCase();
+                    const faqItem = question.closest('.faq-item');
+                    
+                    if (questionText.includes(searchTerm)) {
+                        // 找到FAQ项后，点击对应导航链接
+                        document.querySelector('.help-nav-link[data-target="faq"]').click();
+                        
+                        // 添加active类到找到的FAQ项
+                        faqItem.classList.add('active');
+                        
+                        // 滚动到找到的FAQ项
+                        faqItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        
+                        found = true;
+                        return;
+                    }
+                });
+                
+                if (!found) {
+                    alert('没有找到相关的问题，请尝试其他搜索词。');
+                }
+            });
+
+            // 登录和注册按钮事件监听
+            const loginBtn = document.querySelector('.btn-login');
+            const signupBtn = document.querySelector('.btn-signup');
+            const loginModal = document.getElementById('login-modal');
+            const signupModal = document.getElementById('signup-modal');
+            const closeButtons = document.querySelectorAll('.close-modal');
+            
+            // 密码显示/隐藏切换
+            const togglePasswordButtons = document.querySelectorAll('.toggle-password');
+            togglePasswordButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const inputField = this.previousElementSibling;
+                    
+                    if (inputField.type === 'password') {
+                        inputField.type = 'text';
+                        this.classList.remove('fa-eye-slash');
+                        this.classList.add('fa-eye');
+                    } else {
+                        inputField.type = 'password';
+                        this.classList.remove('fa-eye');
+                        this.classList.add('fa-eye-slash');
+                    }
+                });
+            });
+            
+            // 显示登录模态框
+            loginBtn.addEventListener('click', function() {
+                loginModal.style.display = 'flex';
+                // 添加进入动画
+                animateModalEntry(loginModal.querySelector('.modal-content'));
+            });
+
+            // 显示注册模态框
+            signupBtn.addEventListener('click', function() {
+                signupModal.style.display = 'flex';
+                // 添加进入动画
+                animateModalEntry(signupModal.querySelector('.modal-content'));
+            });
+
+            // 关闭模态框
+            closeButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const modal = this.closest('.modal');
+                    // 添加退出动画
+                    const modalContent = modal.querySelector('.modal-content');
+                    animateModalExit(modalContent, function() {
+                        modal.style.display = 'none';
+                    });
+                });
+            });
+
+            // 点击模态框外部关闭
+            window.addEventListener('click', function(event) {
+                if (event.target === loginModal) {
+                    const modalContent = loginModal.querySelector('.modal-content');
+                    animateModalExit(modalContent, function() {
+                        loginModal.style.display = 'none';
+                    });
+                }
+                if (event.target === signupModal) {
+                    const modalContent = signupModal.querySelector('.modal-content');
+                    animateModalExit(modalContent, function() {
+                        signupModal.style.display = 'none';
+                    });
+                }
+            });
+
+            // 禁止模态框内部点击事件冒泡
+            const modalContents = document.querySelectorAll('.modal-content');
+            modalContents.forEach(content => {
+                content.addEventListener('click', function(event) {
+                    event.stopPropagation();
+                });
+            });
+
+            // 表单提交处理
+            const loginForm = document.getElementById('login-form');
+            const signupForm = document.getElementById('signup-form');
+
+            loginForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                const email = document.getElementById('login-email').value;
+                const password = document.getElementById('login-password').value;
+                
+                // 这里只是示例，实际应该连接到后端进行验证
+                console.log('登录信息:', { email, password });
+                
+                // 模拟登录成功
+                showAnimeNotification('登录成功！欢迎回到火花课堂', 'success');
+                
+                // 添加退出动画然后关闭模态框
+                const modalContent = loginModal.querySelector('.modal-content');
+                animateModalExit(modalContent, function() {
+                    loginModal.style.display = 'none';
+                });
+            });
+
+            signupForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                const nickname = document.getElementById('signup-nickname').value;
+                const email = document.getElementById('signup-email').value;
+                const phone = document.getElementById('signup-phone').value;
+                const password = document.getElementById('signup-password').value;
+                const confirmPassword = document.getElementById('signup-confirm-password').value;
+                
+                // 这里只是示例，实际应该连接到后端进行验证
+                console.log('注册信息:', { nickname, email, phone, password, confirmPassword });
+                
+                // 模拟注册成功
+                showAnimeNotification('注册成功！欢迎加入火花课堂', 'success');
+                
+                // 添加退出动画然后关闭模态框
+                const modalContent = signupModal.querySelector('.modal-content');
+                animateModalExit(modalContent, function() {
+                    signupModal.style.display = 'none';
+                });
+            });
+        });
+    </script>
+</body>
+</html> 

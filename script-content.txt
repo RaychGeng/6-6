@@ -1,0 +1,104 @@
+// 自主学习功能增强脚本
+document.addEventListener('DOMContentLoaded', function() {
+    // 找到自主学习导航�?
+    const selfStudyNavItems = document.querySelectorAll('.nav-item');
+    
+    // 保存原始状�?
+    let originalFlameChat = null;
+    let originalStyles = {};
+    
+    selfStudyNavItems.forEach(item => {
+        const spanElement = item.querySelector('span');
+        if (spanElement && spanElement.textContent === '自主学习') {
+            item.addEventListener('click', function() {
+                // 隐藏小火苗助�?
+                const flameAssistant = document.querySelector('.flame-assistant');
+                if (flameAssistant) {
+                    flameAssistant.style.display = 'none';
+                }
+                
+                // 获取小火苗聊天容�?
+                const flameChat = document.querySelector('.flame-chat-container');
+                if (flameChat) {
+                    // 保存原始聊天容器引用
+                    originalFlameChat = flameChat;
+                    
+                    // 保存原始样式
+                    originalStyles = {
+                        position: flameChat.style.position,
+                        bottom: flameChat.style.bottom,
+                        right: flameChat.style.right,
+                        width: flameChat.style.width,
+                        height: flameChat.style.height,
+                        maxWidth: flameChat.style.maxWidth,
+                        maxHeight: flameChat.style.maxHeight
+                    };
+                    
+                    // 修改样式以适应主内容区
+                    flameChat.style.position = 'relative';
+                    flameChat.style.bottom = 'auto';
+                    flameChat.style.right = 'auto';
+                    flameChat.style.width = '100%';
+                    flameChat.style.height = '500px';
+                    flameChat.style.maxWidth = 'none';
+                    flameChat.style.maxHeight = 'none';
+                    flameChat.style.display = 'flex';
+                    
+                    // 确保它在最上层
+                    flameChat.style.zIndex = '1';
+                    
+                    // 找到自主学习内容区域
+                    const assistantContainer = document.querySelector('#self-study .assistant-container');
+                    if (assistantContainer) {
+                        assistantContainer.innerHTML = '';
+                        assistantContainer.appendChild(flameChat);
+                        
+                        // 自动打开聊天窗口
+                        const flameToggleChat = document.getElementById('flame-toggle-chat');
+                        if (flameToggleChat) {
+                            // 通过直接设置样式打开聊天界面，而不是触发点击事�?
+                            flameChat.style.display = 'flex';
+                        }
+                    }
+                    
+                    // 监听其他导航项的点击，以便还原小火苗助手
+                    monitorNavigation();
+                }
+            });
+        }
+    });
+    
+    // 监听其他导航项的点击
+    function monitorNavigation() {
+        // 获取所有导航项
+        const allNavItems = document.querySelectorAll('.nav-item');
+        
+        allNavItems.forEach(navItem => {
+            const span = navItem.querySelector('span');
+            if (span && span.textContent !== '自主学习') {
+                // 为其他导航项添加一次性点击事�?
+                navItem.addEventListener('click', restoreFlameAssistant, { once: true });
+            }
+        });
+    }
+    
+    // 还原小火苗助�?
+    function restoreFlameAssistant() {
+        if (originalFlameChat) {
+            // 恢复原始样式
+            Object.keys(originalStyles).forEach(key => {
+                originalFlameChat.style[key] = originalStyles[key];
+            });
+            
+            // 将聊天容器移回body
+            document.body.appendChild(originalFlameChat);
+            originalFlameChat.style.display = 'none';
+            
+            // 显示小火苗助�?
+            const flameAssistant = document.querySelector('.flame-assistant');
+            if (flameAssistant) {
+                flameAssistant.style.display = 'flex';
+            }
+        }
+    }
+}); 
